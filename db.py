@@ -1,11 +1,18 @@
 # db.py
 from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
+import os
 
-client = MongoClient("mongodb://localhost:27017/")
+load_dotenv()
+
+mongodb_uri = os.getenv("MONGODB_URI")
+
+client = MongoClient(mongodb_uri)
+
 db = client["blockchain_db"]
 wallets_collection = db["wallets"]
 blocks_collection = db["blocks"]
-
 
 def save_wallet_to_db(wallet):
     wallets_collection.insert_one({
@@ -13,7 +20,6 @@ def save_wallet_to_db(wallet):
         "private_key": wallet.get_private_key(),
         "public_key": wallet.get_public_key()
     })
-
 
 def save_block_to_db(block):
     block_data = {
