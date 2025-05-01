@@ -5,6 +5,7 @@ from models.transaction import Transaction
 from models.wallet import Wallet
 from utils.crypto_utils import decrypt_private_key
 from utils.jwt_utils import decode_token
+from db import transactions_collection
 import base64
 
 blockchain_bp = Blueprint('blockchain', __name__)
@@ -141,3 +142,31 @@ def view_balance():
         return jsonify({"error": "Wallet not found"}), 404
 
     return jsonify({"balance": wallet_data.get("balance", 0)}), 200
+
+
+@blockchain_bp.route("/history", methods=["GET"])
+def get_transaction_history():
+    token = request.headers.get("Authorization").split(" ")[1]
+    decoded = decode_token(token)
+    account_number = decoded["account_number"]
+
+    # Find all transactions where this user is sender or receiver
+    txs = transactions_collection.find({
+        "$or": [
+            {"sender_account": account_number},
+            {"receiver_account": account_number}
+        ]
+    }).sort("timestamp", -1)  # Newest first
+
+    history = []
+    for tx in txs:
+        history.append({
+            "sender": tx["sender_account"],
+            "receiver": tx["receiver_account"],
+            "amount": tx["amount"],
+            "description": tx.get("description", ""),
+            "timestamp": tx["timestamp"],
+            "tx_hash": tx["tx_hash"]
+        })
+
+    return jsonify({"history": history}), 200
