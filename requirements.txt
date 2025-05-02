@@ -1,6 +1,0 @@
-pymongo
-cryptography
-python-dotenv
-shortuuid
-pyjwt
-requests
