@@ -1,0 +1,151 @@
+import Link from "next/link";
+import { Ratio } from "lucide-react";
+
+export function Footer() {
+  return (
+    <footer className="bg-blue-950/20 border-t border-blue-900/30 pt-16 pb-8">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+          <div className="col-span-2 lg:col-span-1">
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <div className="relative w-8 h-8">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Ratio className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <span className="font-bold text-xl">RaqamiX</span>
+            </Link>
+            <p className="text-gray-400 mb-4">
+              The next generation decentralized payment platform for a
+              borderless financial future.
+            </p>
+            <div className="flex gap-4">
+              {["twitter", "facebook", "instagram", "github"].map((social) => (
+                <Link
+                  key={social}
+                  href="#"
+                  className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center hover:bg-blue-800/50 transition-colors"
+                >
+                  <span className="sr-only">{social}</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-lg mb-4">Product</h3>
+            <ul className="space-y-3">
+              {["Features", "Security", "Roadmap", "Pricing", "API"].map(
+                (item) => (
+                  <li key={item}>
+                    <Link
+                      href={`/${item.toLowerCase()}`}
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-lg mb-4">Company</h3>
+            <ul className="space-y-3">
+              {["About", "Blog", "Careers", "Press", "Partners"].map((item) => (
+                <li key={item}>
+                  <Link
+                    href={`/${item.toLowerCase()}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-lg mb-4">Resources</h3>
+            <ul className="space-y-3">
+              {[
+                "Documentation",
+                "Help Center",
+                "Community",
+                "Tutorials",
+                "Status",
+              ].map((item) => (
+                <li key={item}>
+                  <Link
+                    href={`/${item.toLowerCase()}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-lg mb-4">Legal</h3>
+            <ul className="space-y-3">
+              {["Privacy", "Terms", "Cookies", "Licenses", "Settings"].map(
+                (item) => (
+                  <li key={item}>
+                    <Link
+                      href={`/${item.toLowerCase()}`}
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-blue-900/30 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-500 text-sm mb-4 md:mb-0">
+            © {new Date().getFullYear()} RaqamiX. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <Link
+              href="/privacy"
+              className="text-gray-500 hover:text-white text-sm transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/terms"
+              className="text-gray-500 hover:text-white text-sm transition-colors"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              href="#"
+              className="text-gray-500 hover:text-white text-sm transition-colors"
+            >
+              Cookies Settings
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
