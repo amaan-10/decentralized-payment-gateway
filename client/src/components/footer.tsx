@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Ratio } from "lucide-react";
+import { Facebook, Github, Instagram, Ratio, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -21,27 +21,42 @@ export function Footer() {
               borderless financial future.
             </p>
             <div className="flex gap-4">
-              {["twitter", "facebook", "instagram", "github"].map((social) => (
-                <Link
-                  key={social}
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center hover:bg-blue-800/50 transition-colors"
-                >
-                  <span className="sr-only">{social}</span>
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Link>
-              ))}
+              <Link
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center hover:bg-blue-800/50 transition-colors"
+              >
+                <span className="sr-only">Twitter</span>
+                <Twitter className="w-5 h-5" />
+              </Link>
+              <Link
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center hover:bg-blue-800/50 transition-colors"
+              >
+                <span className="sr-only">Facebook</span>
+                <Facebook className="w-5 h-5" />
+              </Link>
+              <Link
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center hover:bg-blue-800/50 transition-colors"
+              >
+                <span className="sr-only">Instagram</span>
+                <Instagram className="w-5 h-5" />
+              </Link>
+              <Link
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center hover:bg-blue-800/50 transition-colors"
+              >
+                <span className="sr-only">GitHub</span>
+                <Github className="w-5 h-5" />
+              </Link>
             </div>
           </div>
 
