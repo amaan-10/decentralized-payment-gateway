@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import type { ReactNode } from "react";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -71,11 +71,7 @@ const sidebarItems = [
   },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

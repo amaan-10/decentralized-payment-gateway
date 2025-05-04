@@ -1,10 +1,33 @@
-import { ArrowRight, ArrowUp, ArrowDown, Wallet, DollarSign } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Progress } from "@/components/ui/progress"
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, LineChart } from "recharts"
+"use client";
+
+import {
+  ArrowRight,
+  ArrowUp,
+  ArrowDown,
+  Wallet,
+  DollarSign,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import {
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Line,
+  LineChart,
+} from "recharts";
 
 // Sample data for charts
 const balanceData = [
@@ -15,7 +38,7 @@ const balanceData = [
   { date: "May", BTC: 1.3, ETH: 4.2, USDT: 2000 },
   { date: "Jun", BTC: 1.8, ETH: 5.0, USDT: 2200 },
   { date: "Jul", BTC: 2.1, ETH: 4.8, USDT: 2500 },
-]
+];
 
 const transactionData = [
   { date: "Mon", value: 1200 },
@@ -25,7 +48,7 @@ const transactionData = [
   { date: "Fri", value: 1200 },
   { date: "Sat", value: 600 },
   { date: "Sun", value: 400 },
-]
+];
 
 const recentTransactions = [
   {
@@ -64,7 +87,7 @@ const recentTransactions = [
     date: "Jul 10, 2023, 11:20 AM",
     status: "pending",
   },
-]
+];
 
 export default function DashboardPage() {
   return (
@@ -75,7 +98,10 @@ export default function DashboardPage() {
           <p className="text-gray-400">Welcome back, John Doe</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" className="border-blue-800 text-blue-400 hover:bg-blue-900/20">
+          <Button
+            variant="outline"
+            className="border-blue-800 text-blue-400 hover:bg-blue-900/20"
+          >
             <Wallet className="mr-2 h-4 w-4" />
             Add Wallet
           </Button>
@@ -90,7 +116,9 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="bg-blue-950/10 border-blue-900/50 backdrop-blur-sm hover:bg-blue-900/20 transition-colors">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Total Balance</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-400">
+              Total Balance
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$24,875.35</div>
@@ -104,7 +132,9 @@ export default function DashboardPage() {
 
         <Card className="bg-blue-950/10 border-blue-900/50 backdrop-blur-sm hover:bg-blue-900/20 transition-colors">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Active Wallets</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-400">
+              Active Wallets
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4</div>
@@ -118,7 +148,9 @@ export default function DashboardPage() {
 
         <Card className="bg-blue-950/10 border-blue-900/50 backdrop-blur-sm hover:bg-blue-900/20 transition-colors">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Total Transactions</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-400">
+              Total Transactions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">156</div>
@@ -132,7 +164,9 @@ export default function DashboardPage() {
 
         <Card className="bg-blue-950/10 border-blue-900/50 backdrop-blur-sm hover:bg-blue-900/20 transition-colors">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Rewards Earned</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-400">
+              Rewards Earned
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$125.40</div>
@@ -162,12 +196,17 @@ export default function DashboardPage() {
                 </TabsList>
               </Tabs>
             </div>
-            <CardDescription>Your asset allocation and performance</CardDescription>
+            <CardDescription>
+              Your asset allocation and performance
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={balanceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <AreaChart
+                  data={balanceData}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
                   <defs>
                     <linearGradient id="colorBTC" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#F7931A" stopOpacity={0.8} />
@@ -185,7 +224,10 @@ export default function DashboardPage() {
                   <XAxis dataKey="date" stroke="#6B7280" />
                   <YAxis stroke="#6B7280" />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "rgba(15, 23, 42, 0.9)", borderColor: "#1E40AF" }}
+                    contentStyle={{
+                      backgroundColor: "rgba(15, 23, 42, 0.9)",
+                      borderColor: "#1E40AF",
+                    }}
                     itemStyle={{ color: "#F3F4F6" }}
                   />
                   <Area
@@ -258,7 +300,7 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-sm font-medium">$12,450.00</span>
                 </div>
-                <Progress value={50} className="h-2 bg-blue-950" indicatorClassName="bg-blue-500" />
+                <Progress value={50} className="h-2 bg-blue-950" />
               </div>
 
               <div className="space-y-2">
@@ -269,7 +311,7 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-sm font-medium">$8,250.35</span>
                 </div>
-                <Progress value={33} className="h-2 bg-blue-950" indicatorClassName="bg-purple-500" />
+                <Progress value={33} className="h-2 bg-blue-950" />
               </div>
 
               <div className="space-y-2">
@@ -280,7 +322,7 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-sm font-medium">$3,175.00</span>
                 </div>
-                <Progress value={13} className="h-2 bg-blue-950" indicatorClassName="bg-pink-500" />
+                <Progress value={13} className="h-2 bg-blue-950" />
               </div>
 
               <div className="space-y-2">
@@ -291,12 +333,15 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-sm font-medium">$1,000.00</span>
                 </div>
-                <Progress value={4} className="h-2 bg-blue-950" indicatorClassName="bg-green-500" />
+                <Progress value={4} className="h-2 bg-blue-950" />
               </div>
             </div>
 
             <div className="mt-6">
-              <Button variant="outline" className="w-full border-blue-800 text-blue-400 hover:bg-blue-900/20">
+              <Button
+                variant="outline"
+                className="w-full border-blue-800 text-blue-400 hover:bg-blue-900/20"
+              >
                 <Wallet className="mr-2 h-4 w-4" />
                 Manage Wallets
               </Button>
@@ -311,7 +356,11 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Recent Transactions</CardTitle>
-              <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-blue-400 hover:text-blue-300"
+              >
                 View All
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -327,31 +376,46 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-4">
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        transaction.type === "receive" ? "bg-green-500/20" : "bg-red-500/20"
+                        transaction.type === "receive"
+                          ? "bg-green-500/20"
+                          : "bg-red-500/20"
                       }`}
                     >
                       {transaction.type === "receive" ? (
                         <ArrowDown
-                          className={`h-5 w-5 ${transaction.type === "receive" ? "text-green-500" : "text-red-500"}`}
+                          className={`h-5 w-5 ${
+                            transaction.type === "receive"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
                         />
                       ) : (
                         <ArrowUp
-                          className={`h-5 w-5 ${transaction.type === "receive" ? "text-green-500" : "text-red-500"}`}
+                          className={`h-5 w-5 ${
+                            transaction.type === "receive"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
                         />
                       )}
                     </div>
                     <div>
                       <div className="font-medium">
-                        {transaction.type === "receive" ? "Received" : "Sent"} {transaction.amount}
+                        {transaction.type === "receive" ? "Received" : "Sent"}{" "}
+                        {transaction.amount}
                       </div>
                       <div className="text-sm text-gray-400">
-                        {transaction.type === "receive" ? `From: ${transaction.from}` : `To: ${transaction.to}`}
+                        {transaction.type === "receive"
+                          ? `From: ${transaction.from}`
+                          : `To: ${transaction.to}`}
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">{transaction.value}</div>
-                    <div className="text-sm text-gray-400">{transaction.date}</div>
+                    <div className="text-sm text-gray-400">
+                      {transaction.date}
+                    </div>
                   </div>
                   <Badge
                     className={`ml-2 ${
@@ -377,11 +441,17 @@ export default function DashboardPage() {
           <CardContent>
             <div className="h-[240px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={transactionData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <LineChart
+                  data={transactionData}
+                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                >
                   <XAxis dataKey="date" stroke="#6B7280" />
                   <YAxis stroke="#6B7280" />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "rgba(15, 23, 42, 0.9)", borderColor: "#1E40AF" }}
+                    contentStyle={{
+                      backgroundColor: "rgba(15, 23, 42, 0.9)",
+                      borderColor: "#1E40AF",
+                    }}
                     itemStyle={{ color: "#F3F4F6" }}
                   />
                   <Line
@@ -414,5 +484,5 @@ export default function DashboardPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
