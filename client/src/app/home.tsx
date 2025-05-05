@@ -23,14 +23,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 px-10 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[120px] opacity-20"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-[120px] opacity-20"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="flex items-center justify-between gap-px">
             <div className="space-y-8">
               <Badge className="bg-blue-900/30 text-blue-400 hover:bg-blue-900/40 px-3 py-1 text-sm">
                 Next Generation Payments
@@ -38,10 +38,10 @@ export default function HomePage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 Fast. Secure. <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                  Borderless Payments.
+                  Borderless <br /> Payments.
                 </span>
               </h1>
-              <p className="text-gray-400 text-lg md:text-xl max-w-lg">
+              <p className="text-gray-400 text-base md:text-lg max-w-lg">
                 Experience the future of financial transactions with our
                 decentralized platform. No intermediaries, no borders, just
                 seamless transfers.
@@ -94,7 +94,7 @@ export default function HomePage() {
       {/* How It Works Section */}
       <section
         id="how-it-works"
-        className="py-20 bg-gradient-to-b from-black to-blue-950/30"
+        className="py-24 bg-gradient-to-b from-black to-blue-950/30"
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
