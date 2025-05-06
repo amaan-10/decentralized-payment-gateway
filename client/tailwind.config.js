@@ -18,6 +18,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sora: ["var(--font-sora)"],
+        grotesk: ["var(--font-space-grotesk)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
