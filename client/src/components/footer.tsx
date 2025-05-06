@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Facebook, Github, Instagram, Ratio, Twitter } from "lucide-react";
+import { Facebook, Github, Instagram, Twitter } from "lucide-react";
+import Logo from "@/assets/logo";
 
 export function Footer() {
   return (
@@ -8,13 +9,13 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="relative w-8 h-8">
+              <div className="relative h-10 w-11">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Ratio className="w-5 h-5 text-white" />
+                  <Logo className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <span className="font-bold text-xl">RaqamiX</span>
+              <span className="font-bold text-xl">DePay</span>
             </Link>
             <p className="text-gray-400 mb-4">
               The next generation decentralized payment platform for a
@@ -137,7 +138,7 @@ export function Footer() {
 
         <div className="border-t border-blue-900/30 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} RaqamiX. All rights reserved.
+            © {new Date().getFullYear()} DePay. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link
