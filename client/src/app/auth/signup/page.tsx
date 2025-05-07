@@ -4,17 +4,9 @@ import type React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Eye,
-  EyeOff,
-  Github,
-  Loader2,
-  Mail,
-  Ratio,
-} from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Github, Loader2, Mail } from "lucide-react";
 import { motion } from "framer-motion";
-
+import Logo from "@/assets/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -62,10 +54,10 @@ export default function SignupPage() {
             <div className="relative w-8 h-8">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Ratio className="w-5 h-5 text-white" />
+                <Logo className="w-5 h-5 text-white" />
               </div>
             </div>
-            <span className="font-bold text-xl">RaqamiX</span>
+            <span className="font-bold text-xl">DePay</span>
           </Link>
         </div>
 
