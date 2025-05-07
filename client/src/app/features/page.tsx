@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 mx-10">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -41,21 +41,21 @@ export default function FeaturesPage() {
               </span>
             </h1>
             <p className="text-gray-400 text-lg md:text-xl">
-              Discover how RaqamiX is revolutionizing payments with cutting-edge
+              Discover how DePay is revolutionizing payments with cutting-edge
               blockchain technology and user-friendly features.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-7 items-center">
             <div className="relative">
               <div className="relative z-10">
-                <div className="relative w-full h-[400px]">
+                <div className="relative w-full">
                   <Image
-                    src="/placeholder.svg?height=400&width=500"
+                    src="/features-img2.png"
                     alt="Platform Features"
-                    width={500}
+                    width={550}
                     height={400}
-                    className="object-contain"
+                    className="pl-4 object-contain"
                   />
                 </div>
               </div>
@@ -118,8 +118,8 @@ export default function FeaturesPage() {
       </section>
 
       {/* Detailed Features Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-blue-950/30">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-gradient-to-b from-black to-blue-950/30 -mx-10">
+        <div className="container mx-auto px-14">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Comprehensive Payment Solutions
@@ -170,7 +170,7 @@ export default function FeaturesPage() {
               {
                 title: "Developer API",
                 description:
-                  "Comprehensive API documentation and SDKs to integrate RaqamiX payments into your applications.",
+                  "Comprehensive API documentation and SDKs to integrate DePay payments into your applications.",
                 icon: FileCode,
                 gradient: "from-red-600 to-red-400",
               },
@@ -279,7 +279,7 @@ export default function FeaturesPage() {
               <div className="relative z-10">
                 <div className="relative w-full h-[400px]">
                   <Image
-                    src="/placeholder.svg?height=400&width=500"
+                    src="/features-img1.png"
                     alt="Smart Contracts"
                     width={500}
                     height={400}
@@ -294,8 +294,8 @@ export default function FeaturesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-b from-blue-950/30 to-black">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-gradient-to-b from-blue-950/30 to-black -mx-10">
+        <div className="container mx-auto px-14">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-900/50 to-purple-900/50 backdrop-blur-sm border border-blue-800/50">
             <div className="absolute inset-0">
               <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600 rounded-full filter blur-[120px] opacity-20"></div>
@@ -308,7 +308,7 @@ export default function FeaturesPage() {
               </h2>
               <p className="text-gray-300 max-w-2xl mx-auto mb-8">
                 Join thousands of users who have already embraced the future of
-                decentralized payments with RaqamiX.
+                decentralized payments with DePay.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
