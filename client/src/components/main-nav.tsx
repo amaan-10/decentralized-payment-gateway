@@ -121,7 +121,7 @@ export function MainNav() {
                 <LayoutDashboard className="w-5 h-5" />
               </Link>
               <Link
-                href="/dashboard/settings"
+                href="/settings"
                 className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
               >
                 <Settings className="w-5 h-5" />
