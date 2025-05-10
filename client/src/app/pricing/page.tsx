@@ -69,7 +69,7 @@ export default function PricingPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 mx-10">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -179,7 +179,7 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-blue-950/30">
+      <section className="py-20 bg-gradient-to-b from-black to-blue-950/30 -mx-10 ">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
