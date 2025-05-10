@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Zap, Home, ArrowLeft } from "lucide-react";
+import { Home, ArrowLeft } from "lucide-react";
+import Logo from "@/assets/logo";
 
 export default function NotFoundPage() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -18,24 +19,25 @@ export default function NotFoundPage() {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
+  
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-black">
+    <div className="min-h-screen flex flex-col items-center justify-center py-14 px-4 sm:px-6 lg:px-8 bg-black">
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[120px] opacity-20"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-[120px] opacity-20"></div>
       </div>
 
-      <div className="w-full max-w-md z-10 text-center">
+      <div className="w-full max-w-md z-10 mt-10 text-center">
         <div className="mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             <div className="relative w-10 h-10">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
+                <Logo className="w-6 h-6 text-white" />
               </div>
             </div>
-            <span className="font-bold text-2xl">RaqamiX</span>
+            <span className="font-bold text-2xl">DePay</span>
           </Link>
         </div>
 
