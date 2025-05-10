@@ -3,31 +3,44 @@ import "../styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { MainNav } from "@/components/main-nav";
 import { Footer } from "@/components/footer";
-import { FloatingWalletButton } from "@/components/floating-wallet-button";
 import { Toaster } from "@/components/ui/toaster";
+import { Sora, Space_Grotesk } from "next/font/google";
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+  weight: ["500", "700"],
+});
 
 export const metadata = {
-  title: "RaqamiX - Fast. Secure. Borderless Payments.",
+  title: "DePay - Fast. Secure. Borderless Payments.",
   description:
     "Experience the future of financial transactions with our decentralized platform. No intermediaries, no borders, just seamless transfers.",
   keywords:
     "crypto, blockchain, payments, decentralized, finance, defi, wallet",
-  // authors: [{ name: "RaqamiX Team" }],
+  // authors: [{ name: "DePay Team" }],
   // openGraph: {
   //   type: "website",
   //   locale: "en_US",
-  //   url: "https://raqamix.com",
-  //   title: "RaqamiX - Fast. Secure. Borderless Payments.",
+  //   url: "https://depay.com",
+  //   title: "DePay - Fast. Secure. Borderless Payments.",
   //   description:
   //     "Experience the future of financial transactions with our decentralized platform.",
-  //   siteName: "RaqamiX",
+  //   siteName: "DePay",
   // },
   // twitter: {
   //   card: "summary_large_image",
-  //   title: "RaqamiX - Fast. Secure. Borderless Payments.",
+  //   title: "DePay - Fast. Secure. Borderless Payments.",
   //   description:
   //     "Experience the future of financial transactions with our decentralized platform.",
-  //   creator: "@RaqamiX",
+  //   creator: "@DePay",
   // },
   // manifest: "/manifest.json",
   // generator: "v0.dev",
@@ -39,7 +52,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${sora.variable} ${spaceGrotesk.variable} dark`}
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="apple-touch-icon"
@@ -60,12 +77,11 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="min-h-screen bg-black text-white antialiased">
+      <body className="min-h-screen bg-black text-white antialiased font-sora">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <MainNav />
           <main>{children}</main>
           <Footer />
-          <FloatingWalletButton />
           <Toaster />
         </ThemeProvider>
       </body>
