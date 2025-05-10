@@ -30,12 +30,17 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
+          <div className="flex justify-center items-center -mt-7 mb-5">
+            <Badge className=" self-center bg-neutral-400/30 text-neutral-300 border border-neutral-400 hover:bg-neutral-400/40 px-3 py-1 text-sm rounded-full">
+              In Progress, Stay Tuned! 🚀
+            </Badge>
+          </div>
           <div className="flex items-center justify-between gap-px">
             <div className="space-y-8">
               <Badge className="bg-blue-900/30 text-blue-400 hover:bg-blue-900/40 px-3 py-1 text-sm">
                 Next Generation Payments
               </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight font-grotesk">
                 Fast. Secure. <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
                   Borderless <br /> Payments.
@@ -63,19 +68,19 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative flex justify-center h-[400px]">
               <div className="relative z-10 wallet-animation">
-                <div className="relative w-full h-[400px]">
+                <div className="relative">
                   <Image
-                    src="/placeholder.svg?height=400&width=400"
+                    src="/home-image.png"
                     alt="Crypto Wallet Illustration"
-                    width={400}
-                    height={400}
-                    className="object-contain"
+                    width={500}
+                    height={500}
+                    className="object-contain pr-20"
                   />
                 </div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-xl"></div>
+              <div className="absolute left-[10%] right-[-10%] top-[95%] bottom-[-15%] bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-xl"></div>
             </div>
           </div>
 
@@ -304,21 +309,21 @@ export default function HomePage() {
                 role: "Freelance Developer",
                 image: "/placeholder.svg?height=80&width=80",
                 quote:
-                  "As a freelancer working with international clients, RaqamiX has eliminated payment delays and reduced my transaction fees by over 80%.",
+                  "As a freelancer working with international clients, DePay has eliminated payment delays and reduced my transaction fees by over 80%.",
               },
               {
                 name: "Sarah Chen",
                 role: "E-commerce Business Owner",
                 image: "/placeholder.svg?height=80&width=80",
                 quote:
-                  "Integrating RaqamiX into my online store has opened up a global customer base that was previously inaccessible due to payment limitations.",
+                  "Integrating DePay into my online store has opened up a global customer base that was previously inaccessible due to payment limitations.",
               },
               {
                 name: "Michael Rodriguez",
                 role: "Digital Nomad",
                 image: "/placeholder.svg?height=80&width=80",
                 quote:
-                  "I travel constantly and RaqamiX has been a game-changer. I can receive payments and manage my finances from anywhere without worrying about currency conversion.",
+                  "I travel constantly and DePay has been a game-changer. I can receive payments and manage my finances from anywhere without worrying about currency conversion.",
               },
             ].map((testimonial, index) => (
               <Card
