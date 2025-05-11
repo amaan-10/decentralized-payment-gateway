@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import type { ReactNode } from "react";
-
+import Logo from "@/assets/logo";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +16,6 @@ import {
   Bell,
   User,
   Menu,
-  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -84,10 +84,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="relative w-8 h-8">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
+                <Logo className="w-5 h-5 text-white" />
               </div>
             </div>
-            <span className="font-bold text-xl">RaqamiX</span>
+            <span className="font-bold text-xl">DePay</span>
           </Link>
 
           <div className="flex items-center gap-2">
@@ -178,16 +178,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div className="flex h-screen pt-16 md:pt-0">
         {/* Sidebar */}
         <SidebarProvider>
-          <Sidebar className="hidden md:flex" collapsible="icon">
+          {/* <Sidebar className="hidden md:flex" collapsible="icon">
             <SidebarHeader className="flex items-center justify-between p-4">
               <Link href="/" className="flex items-center gap-2">
                 <div className="relative w-8 h-8">
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-white" />
+                    <Logo className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <span className="font-bold text-xl">RaqamiX</span>
+                <span className="font-bold text-xl">DePay</span>
               </Link>
               <SidebarTrigger />
             </SidebarHeader>
@@ -250,12 +250,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </DropdownMenu>
               </div>
             </SidebarFooter>
-          </Sidebar>
+          </Sidebar> */}
 
           {/* Main Content */}
           <div className="flex-1 overflow-auto">
             {/* Desktop Header */}
-            <header className="hidden md:flex h-16 items-center justify-end px-6 border-b border-blue-900/20 bg-black/80 backdrop-blur-lg">
+            {/* <header className="hidden md:flex h-16 items-center justify-end px-6 border-b border-blue-900/20 bg-black/80 backdrop-blur-lg">
               <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
@@ -291,7 +291,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-            </header>
+            </header> */}
 
             {/* Page Content */}
             <div className="p-6">{children}</div>
