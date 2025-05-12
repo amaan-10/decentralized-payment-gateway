@@ -2,17 +2,23 @@
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import { DayPicker, DayPickerProps } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+// Extend the DayPickerProps type to accept custom components for IconLeft and IconRight
+export type CalendarProps = DayPickerProps & {
+  IconLeft?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  IconRight?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  IconLeft = ChevronLeft, // Default to ChevronLeft if no icon is passed
+  IconRight = ChevronRight, // Default to ChevronRight if no icon is passed
   ...props
 }: CalendarProps) {
   return (
@@ -61,16 +67,17 @@ function Calendar({
       }}
       components={{
         IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
+          <IconLeft className={cn("h-4 w-4", className)} {...props} />
         ),
         IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
+          <IconRight className={cn("h-4 w-4", className)} {...props} />
         ),
       }}
       {...props}
     />
   )
 }
+
 Calendar.displayName = "Calendar"
 
 export { Calendar }
