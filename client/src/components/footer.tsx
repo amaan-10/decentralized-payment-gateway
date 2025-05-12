@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="bg-blue-950/20 border-t border-blue-900/30 pt-16 pb-8 px-10">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="relative h-10 w-11">
@@ -61,9 +61,9 @@ export function Footer() {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col items-end">
             <h3 className="font-bold text-lg mb-4">Product</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-end">
               {["Features", "Security", "Roadmap", "Pricing", "API"].map(
                 (item) => (
                   <li key={item}>
@@ -79,9 +79,9 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="flex flex-col items-end">
             <h3 className="font-bold text-lg mb-4">Company</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-end">
               {["About", "Blog", "Careers", "Press", "Partners"].map((item) => (
                 <li key={item}>
                   <Link
@@ -95,7 +95,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
+          {/* <div>
             <h3 className="font-bold text-lg mb-4">Resources</h3>
             <ul className="space-y-3">
               {[
@@ -115,11 +115,11 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
-          <div>
+          <div className="flex flex-col items-end">
             <h3 className="font-bold text-lg mb-4">Legal</h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-end">
               {["Privacy", "Terms", "Cookies", "Licenses", "Settings"].map(
                 (item) => (
                   <li key={item}>

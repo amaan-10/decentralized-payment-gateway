@@ -27,7 +27,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export function MainNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -51,105 +50,104 @@ export function MainNav() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <Logo className="w-8 h-8 text-white" />
-              </div>
+</div>
             </div>
             <span className="font-bold text-xl">DePay</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors">
-                Features <ChevronDown className="h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center">
-                <DropdownMenuItem asChild>
-                  <Link href="/features" className="cursor-pointer">
-                    <Lock className="mr-2 h-4 w-4" />
-                    <span>Security</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/features" className="cursor-pointer">
-                    <Zap className="mr-2 h-4 w-4" />
-                    <span>Speed</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/features" className="cursor-pointer">
-                    <TagIcon className="mr-2 h-4 w-4" />
-                    <span>Smart Contracts</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex gap-10">
+            <nav className="hidden md:flex items-center gap-8">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors">
+                  Features <ChevronDown className="h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuItem asChild>
+                    <Link href="/features" className="cursor-pointer">
+                      <Lock className="mr-2 h-4 w-4" />
+                      <span>Security</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/features" className="cursor-pointer">
+                      <Zap className="mr-2 h-4 w-4" />
+                      <span>Speed</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/features" className="cursor-pointer">
+                      <TagIcon className="mr-2 h-4 w-4" />
+                      <span>Smart Contracts</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            <Link
-              href="/pricing"
-              className={`text-gray-300 hover:text-white transition-colors ${
-                isActive("/pricing") ? "text-white font-medium" : ""
-              }`}
-            >
-              Pricing
-            </Link>
-
-            <Link
-              href="/about"
-              className={`text-gray-300 hover:text-white transition-colors ${
-                isActive("/about") ? "text-white font-medium" : ""
-              }`}
-            >
-              About
-            </Link>
-
-            <Link
-              href="/contact"
-              className={`text-gray-300 hover:text-white transition-colors ${
-                isActive("/contact") ? "text-white font-medium" : ""
-              }`}
-            >
-              Contact
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-4">
-              <ThemeToggle />
               <Link
-                href="/dashboard"
-                className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
+                href="/pricing"
+                className={`text-gray-300 hover:text-white transition-colors ${
+                  isActive("/pricing") ? "text-white font-medium" : ""
+                }`}
               >
-                <LayoutDashboard className="w-5 h-5" />
+                Pricing
               </Link>
-              <Link
-                href="/settings"
-                className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
-              >
-                <Settings className="w-5 h-5" />
-              </Link>
-            </div>
 
-            <div className="hidden sm:block">
+              <Link
+                href="/about"
+                className={`text-gray-300 hover:text-white transition-colors ${
+                  isActive("/about") ? "text-white font-medium" : ""
+                }`}
+              >
+                About
+              </Link>
+
+              <Link
+                href="/contact"
+                className={`text-gray-300 hover:text-white transition-colors ${
+                  isActive("/contact") ? "text-white font-medium" : ""
+                }`}
+              >
+                Contact
+              </Link>
+            </nav>
+
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-4">
+                {/* <ThemeToggle /> */}
+                <Link
+                  href="/dashboard"
+                  className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
+                >
+                  <LayoutDashboard className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/settings"
+                  className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
+                >
+                  <Settings className="w-5 h-5" />
+                </Link>
+              </div>
+
+              <div className="hidden sm:block">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  <Link href="/auth/login">Sign In</Link>
+                </Button>
+              </div>
+
               <Button
-                asChild
-                variant="outline"
-                className="mr-2 border-blue-800 text-gray-300 hover:bg-blue-900/20"
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => setMobileMenuOpen(true)}
               >
-                <Link href="/auth/login">Sign In</Link>
-              </Button>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                Sign Up
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Open mobile menu</span>
               </Button>
             </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Open mobile menu</span>
-            </Button>
           </div>
         </div>
       </div>
