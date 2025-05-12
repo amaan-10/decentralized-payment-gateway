@@ -72,7 +72,7 @@ export default function HomePage() {
               <div className="relative z-10 wallet-animation">
                 <div className="relative">
                   <Image
-                    src="/home-image.png"
+                    src="/wallet-img.png"
                     alt="Crypto Wallet Illustration"
                     width={500}
                     height={500}
@@ -180,27 +180,61 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {[
-              { name: "Bitcoin", icon: Bitcoin, color: "bg-orange-500" },
-              { name: "Ethereum", icon: Ethereum, color: "bg-blue-500" },
-              { name: "Litecoin", icon: Litecoin, color: "bg-gray-500" },
-              { name: "Ripple", icon: Zap, color: "bg-blue-400" },
-              { name: "Cardano", icon: Zap, color: "bg-blue-600" },
-              { name: "Solana", icon: Zap, color: "bg-purple-500" },
-              { name: "Polkadot", icon: Zap, color: "bg-pink-500" },
-              { name: "Avalanche", icon: Zap, color: "bg-red-500" },
-              { name: "Chainlink", icon: Zap, color: "bg-blue-300" },
-              { name: "Stellar", icon: Zap, color: "bg-yellow-500" },
-              { name: "Tether", icon: Zap, color: "bg-green-500" },
-              { name: "USD Coin", icon: Zap, color: "bg-blue-500" },
+              {
+                name: "Bitcoin",
+                image: "/Bitcoin.png",
+                color: "bg-orange-500",
+              },
+              {
+                name: "Ethereum",
+                image: "/Ethereum.png",
+                color: "bg-blue-500",
+              },
+              {
+                name: "Litecoin",
+                image: "/Litecoin.png",
+                color: "bg-gray-500",
+              },
+              { name: "Ripple", image: "/Ripple.png", color: "bg-blue-400" },
+              { name: "Cardano", image: "/Cardano.png", color: "bg-blue-600" },
+              { name: "Solana", image: "/Solana.png", color: "bg-purple-500" },
+              {
+                name: "Polkadot",
+                image: "/Polkadot.png",
+                color: "bg-pink-500",
+              },
+              {
+                name: "Avalanche",
+                image: "/Avalanche.png",
+                color: "bg-red-500",
+              },
+              {
+                name: "Chainlink",
+                image: "/Chainlink.png",
+                color: "bg-blue-300",
+              },
+              {
+                name: "Stellar",
+                image: "/Stellar.png",
+                color: "bg-yellow-500",
+              },
+              { name: "Tether", image: "/Tether.png", color: "bg-green-500" },
+              { name: "USD Coin", image: "/USD.png", color: "bg-blue-500" },
             ].map((coin, index) => (
               <div
                 key={index}
                 className="bg-blue-950/10 border border-blue-900/30 rounded-xl p-4 flex flex-col items-center hover:bg-blue-900/20 transition-all hover:scale-105"
               >
                 <div
-                  className={`w-12 h-12 ${coin.color} rounded-full flex items-center justify-center mb-3`}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center mb-3`}
                 >
-                  <coin.icon className="w-6 h-6 text-white" />
+                  <Image
+                    src={coin.image}
+                    alt={coin.name}
+                    width={200}
+                    height={200}
+                    className="w-12 h-12 text-white rounded-full"
+                  />
                 </div>
                 <span className="font-medium">{coin.name}</span>
               </div>
@@ -305,23 +339,23 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                name: "Alex Thompson",
+                name: "Rohan Mehta",
                 role: "Freelance Developer",
-                image: "/placeholder.svg?height=80&width=80",
+                image: "/rohan-mehta.png",
                 quote:
                   "As a freelancer working with international clients, DePay has eliminated payment delays and reduced my transaction fees by over 80%.",
               },
               {
-                name: "Sarah Chen",
+                name: "Priya Sharma",
                 role: "E-commerce Business Owner",
-                image: "/placeholder.svg?height=80&width=80",
+                image: "/priya-sharma.png",
                 quote:
                   "Integrating DePay into my online store has opened up a global customer base that was previously inaccessible due to payment limitations.",
               },
               {
-                name: "Michael Rodriguez",
+                name: "Arjun Rao",
                 role: "Digital Nomad",
-                image: "/placeholder.svg?height=80&width=80",
+                image: "/arjun-rao.png",
                 quote:
                   "I travel constantly and DePay has been a game-changer. I can receive payments and manage my finances from anywhere without worrying about currency conversion.",
               },
