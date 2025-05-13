@@ -58,7 +58,9 @@ export function MainNav() {
           <div className="flex gap-10">
             <nav className="hidden md:flex items-center gap-8">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors">
+                <DropdownMenuTrigger className={`flex items-center gap-1 text-gray-300 hover:text-white transition-colors ${
+                  isActive("/features") ? "text-blue-600 font-semibold" : ""
+                }`}>
                   Features <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center">
@@ -86,7 +88,7 @@ export function MainNav() {
               <Link
                 href="/pricing"
                 className={`text-gray-300 hover:text-white transition-colors ${
-                  isActive("/pricing") ? "text-white font-medium" : ""
+                  isActive("/pricing") ? "text-blue-600 font-semibold" : ""
                 }`}
               >
                 Pricing
@@ -95,7 +97,7 @@ export function MainNav() {
               <Link
                 href="/about"
                 className={`text-gray-300 hover:text-white transition-colors ${
-                  isActive("/about") ? "text-white font-medium" : ""
+                  isActive("/about") ? "text-blue-600 font-semibold" : ""
                 }`}
               >
                 About
@@ -104,7 +106,7 @@ export function MainNav() {
               <Link
                 href="/contact"
                 className={`text-gray-300 hover:text-white transition-colors ${
-                  isActive("/contact") ? "text-white font-medium" : ""
+                  isActive("/contact") ? "text-blue-600 font-semibold" : ""
                 }`}
               >
                 Contact
