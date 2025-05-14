@@ -64,11 +64,11 @@ export function Footer() {
           <div className="flex flex-col items-end">
             <h3 className="font-bold text-lg mb-4">Product</h3>
             <ul className="space-y-3 text-end">
-              {["Features", "Security", "Roadmap", "Pricing", "API"].map(
+              {["Features", "Security", "Roadmap", "Pricing", "API Docs"].map(
                 (item) => (
                   <li key={item}>
                     <Link
-                      href={`/${item.toLowerCase()}`}
+                      href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       {item}

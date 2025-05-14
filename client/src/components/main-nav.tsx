@@ -50,7 +50,7 @@ export function MainNav() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <Logo className="w-8 h-8 text-white" />
-</div>
+              </div>
             </div>
             <span className="font-bold text-xl">DePay</span>
           </Link>
@@ -58,9 +58,13 @@ export function MainNav() {
           <div className="flex gap-10">
             <nav className="hidden md:flex items-center gap-8">
               <DropdownMenu>
-                <DropdownMenuTrigger className={`flex items-center gap-1 text-gray-300 hover:text-white transition-colors ${
-                  isActive("/features") ? "text-blue-600 font-semibold" : ""
-                }`}>
+                <DropdownMenuTrigger
+                  className={`flex items-center gap-1 hover:text-white hover:font-semibold transition-colors ${
+                    isActive("/features")
+                      ? "text-blue-500 font-semibold"
+                      : "text-gray-300"
+                  }`}
+                >
                   Features <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center">
@@ -87,8 +91,10 @@ export function MainNav() {
 
               <Link
                 href="/pricing"
-                className={`text-gray-300 hover:text-white transition-colors ${
-                  isActive("/pricing") ? "text-blue-600 font-semibold" : ""
+                className={`hover:text-white hover:font-semibold transition-colors ${
+                  isActive("/pricing")
+                    ? "text-blue-500 font-semibold"
+                    : "text-gray-300"
                 }`}
               >
                 Pricing
@@ -96,8 +102,10 @@ export function MainNav() {
 
               <Link
                 href="/about"
-                className={`text-gray-300 hover:text-white transition-colors ${
-                  isActive("/about") ? "text-blue-600 font-semibold" : ""
+                className={`hover:text-white hover:font-semibold transition-colors ${
+                  isActive("/about")
+                    ? "text-blue-500 font-semibold"
+                    : "text-gray-300"
                 }`}
               >
                 About
@@ -105,8 +113,10 @@ export function MainNav() {
 
               <Link
                 href="/contact"
-                className={`text-gray-300 hover:text-white transition-colors ${
-                  isActive("/contact") ? "text-blue-600 font-semibold" : ""
+                className={`hover:text-white hover:font-semibold transition-colors ${
+                  isActive("/contact")
+                    ? "text-blue-500 font-semibold"
+                    : "text-gray-300"
                 }`}
               >
                 Contact
