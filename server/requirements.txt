@@ -4,3 +4,4 @@ python-dotenv
 shortuuid
 pyjwt
 requests
+flask
