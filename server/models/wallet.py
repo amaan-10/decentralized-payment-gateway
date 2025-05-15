@@ -7,12 +7,15 @@ from utils.crypto_utils import generate_keys, serialize_private_key
 from cryptography.hazmat.primitives import serialization
 
 class Wallet:
-    def __init__(self, password, name):
+    def __init__(self, password, firstname, lastname, email):
         # Generate a 12-digit unique account number
         self.account_number = self.generate_unique_account_number()
         self.private_key, self.public_key = generate_keys() 
         self.password = password
-        self.name = name  
+        self.firstname = firstname
+        self.lastname = lastname  
+        self.email = email
+        self.balance = 0
         self.created_at = datetime.now()  
 
     def generate_unique_account_number(self):
@@ -26,7 +29,10 @@ class Wallet:
         
         wallet_data = {
             "account_number": self.account_number,
-            "name": self.name,  
+            "firstname": self.firstname,  
+            "lastname": self.lastname,
+            "email": self.email,
+            "balance": self.balance,
             "created_at": self.created_at, 
             "encrypted_private_key": base64.b64encode(encrypted_private_key).decode(),
             "salt": base64.b64encode(salt).decode(),
@@ -41,6 +47,10 @@ class Wallet:
     @staticmethod
     def find_by_account_number(account_number):
         return wallets_collection.find_one({"account_number": account_number})
+    
+    @staticmethod
+    def find_by_email(email):
+        return wallets_collection.find_one({"email": email})
 
     @staticmethod
     def update_balance(account_number, amount_change):

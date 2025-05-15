@@ -2,31 +2,56 @@
 from flask import Blueprint, request, jsonify
 from models.wallet import Wallet
 from utils.jwt_utils import generate_token
+from utils.jwt_utils import decode_token
+from db import wallets_collection
+from utils.hashed import hash_pin
+from utils.hashed import verify_pin
 import base64
 
 auth_bp = Blueprint('auth', __name__)
 
+import re
+
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
+    firstname = data.get("firstname")
+    lastname = data.get("lastname")
+    email = data.get("email")
     password = data.get("password")
-    name = data.get("name")
-    if not password:
-        return jsonify({"error": "Password required"}), 400
 
-    wallet = Wallet(password, name)
+    if not email or not firstname or not lastname or not password:
+        return jsonify({"error": "firstname, lastname, email, and password are required"}), 400
+
+    # Validate password strength
+    password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$'
+    if not re.match(password_regex, password):
+        return jsonify({
+            "error": "Password must be at least 8 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and 1 number."
+        }), 400
+
+    # Check if email already exists
+    if Wallet.find_by_email(email):
+        return jsonify({"error": "An account with this email already exists"}), 409
+
+    wallet = Wallet(password, firstname, lastname, email)
     wallet.save_to_db()
     token = generate_token(wallet.account_number)
 
-    return jsonify({"account_number": wallet.account_number, "token": token}), 201
+    return jsonify({
+        "account_number": wallet.account_number,
+        "token": token
+    }), 201
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-    account_number = data.get("account_number")
+    email = data.get("email")
     password = data.get("password")
 
-    wallet_data = Wallet.find_by_account_number(account_number)
+    wallet_data = Wallet.find_by_email(email)
+    account_number = wallet_data["account_number"]
+
     if not wallet_data:
         return jsonify({"error": "Wallet not found."}), 404
 
@@ -41,3 +66,58 @@ def login():
 
     token = generate_token(account_number)
     return jsonify({"token": token}), 200
+
+@auth_bp.route("/set-pin", methods=["POST"])
+def set_pin():
+    token = request.headers.get("Authorization").split(" ")[1]
+    decoded = decode_token(token)
+
+    data = request.get_json()
+    account_number = decoded["account_number"]
+    pin = data.get("pin")
+
+    # Input validation
+    if not account_number or not pin:
+        return jsonify({"error": "Account Number, and 4-digit PIN are required"}), 400
+
+    if not isinstance(pin, str) or not pin.isdigit() or len(pin) != 4:
+        return jsonify({"error": "PIN must be a 4-digit number"}), 400
+
+    # Find wallet by name and account_number
+    wallet = wallets_collection.find_one({"account_number": account_number})
+    if not wallet:
+        return jsonify({"error": "Wallet not found for the provided name and account number"}), 404
+    
+    hashed_pin = hash_pin(pin)
+
+    # Save PIN (optional: hash it for security)
+    wallets_collection.update_one(
+        {"_id": wallet["_id"]},
+        {"$set": {"pin": hashed_pin}}  # 🔐 In production, hash the PIN!
+    )
+
+    return jsonify({
+        "message": "PIN successfully set",
+        "account_number": wallet["account_number"]
+    }), 200
+
+@auth_bp.route("/verify-pin", methods=["POST"])
+def verify_wallet_pin():
+    token = request.headers.get("Authorization").split(" ")[1]
+    decoded = decode_token(token)
+
+    data = request.get_json()
+    account_number = decoded["account_number"]
+    pin = data.get("pin")
+
+    if not account_number or not pin:
+        return jsonify({"error": "Account number and PIN are required"}), 400
+
+    wallet = wallets_collection.find_one({"account_number": account_number})
+    if not wallet or "pin" not in wallet:
+        return jsonify({"error": "Wallet not found or PIN not set"}), 404
+
+    if verify_pin(pin, wallet["pin"]):
+        return jsonify({"message": "PIN verified successfully"}), 200
+    else:
+        return jsonify({"error": "Invalid PIN"}), 401
