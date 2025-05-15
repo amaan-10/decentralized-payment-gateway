@@ -29,8 +29,8 @@ class Wallet:
         
         wallet_data = {
             "account_number": self.account_number,
-            "firstname": self.firstname,  
-            "lastname": self.lastname,
+            "first_name": self.firstname,  
+            "last_name": self.lastname,
             "email": self.email,
             "balance": self.balance,
             "created_at": self.created_at, 

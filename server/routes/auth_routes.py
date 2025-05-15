@@ -15,8 +15,8 @@ import re
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
-    firstname = data.get("firstname")
-    lastname = data.get("lastname")
+    firstname = data.get("firstName")
+    lastname = data.get("lastName")
     email = data.get("email")
     password = data.get("password")
 
@@ -83,10 +83,10 @@ def set_pin():
     if not isinstance(pin, str) or not pin.isdigit() or len(pin) != 4:
         return jsonify({"error": "PIN must be a 4-digit number"}), 400
 
-    # Find wallet by name and account_number
+    # Find wallet by account_number
     wallet = wallets_collection.find_one({"account_number": account_number})
     if not wallet:
-        return jsonify({"error": "Wallet not found for the provided name and account number"}), 404
+        return jsonify({"error": "Wallet not found for account number"}), 404
     
     hashed_pin = hash_pin(pin)
 
