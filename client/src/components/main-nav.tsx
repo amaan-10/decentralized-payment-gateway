@@ -17,7 +17,7 @@ import {
   Zap,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "@/assets/logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,14 +32,63 @@ export function MainNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Don't show the main header in dashboard or auth routes
-  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/auth")) {
-    return null;
-  }
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  // Validate token on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setIsLoggedIn(false);
+      setCheckingAuth(false);
+      return;
+    }
+
+    // Call backend to verify token
+    fetch(
+      "http://localhost:5000/api/auth/validate-token",
+      // "https://api-depayment.vercel.app/api/auth/validate-token",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Invalid token");
+        }
+        return res.json();
+      })
+      .then(() => {
+        setIsLoggedIn(true);
+      })
+      .catch(() => {
+        // Invalid token, clear it
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+      })
+      .finally(() => {
+        setCheckingAuth(false);
+      });
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
+  console.log(isLoggedIn);
 
   const isActive = (path: string) => {
     return pathname === path;
   };
+
+  // Don't show the main header in dashboard or auth routes
+  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/auth")) {
+    return null;
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-black/50 border-b border-blue-900/20 px-10 pt-4 pb-2">
@@ -141,13 +190,23 @@ export function MainNav() {
               </div>
 
               <div className="hidden sm:block">
-                <Button
-                  asChild
-                  variant="outline"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  <Link href="/auth/login">Sign In</Link>
-                </Button>
+                {isLoggedIn ? (
+                  <Button
+                    variant="outline"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={handleLogout}
+                  >
+                    Sign Out
+                  </Button>
+                ) : (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    <Link href="/auth/login">Sign In</Link>
+                  </Button>
+                )}
               </div>
 
               <Button
@@ -178,19 +237,19 @@ export function MainNav() {
               <div className="relative w-8 h-8">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-sm opacity-70"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
+                  <Logo className="w-5 h-5 text-white" />
                 </div>
               </div>
-              <span className="font-bold text-xl">CryptoFlow</span>
+              <span className="font-bold text-xl">DePay</span>
             </Link>
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(false)}
             >
               <X className="h-6 w-6" />
               <span className="sr-only">Close mobile menu</span>
-            </Button>
+            </Button> */}
           </div>
 
           <nav className="flex flex-col space-y-4">
