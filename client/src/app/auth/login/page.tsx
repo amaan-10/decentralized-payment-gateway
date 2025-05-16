@@ -25,15 +25,53 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/auth/login",
+        // "https://api-depayment.vercel.app/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const result = await res.json();
+
+      console.log(result);
+
+      localStorage.setItem("token", result.token);
+
+      if (!res.ok) {
+        throw new Error(result.error || "Something went wrong");
+      }
+
+      alert("Login successful");
+
+      // optionally redirect or reset the form
+      if (result.hasSetPin === false) {
+        window.location.href = "/auth/set-pin";
+      } else {
+        window.location.href = "/";
+      }
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
       setIsLoading(false);
-      window.location.href = "/dashboard";
-    }, 1500);
+    }
   };
 
   return (
@@ -91,6 +129,7 @@ export default function LoginPage() {
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
                       placeholder="name@example.com"
                       required
@@ -111,6 +150,7 @@ export default function LoginPage() {
                     <div className="relative">
                       <Input
                         id="password"
+                        name="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         required
