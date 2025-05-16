@@ -39,7 +39,8 @@ class Wallet:
             "public_key": self.public_key.public_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PublicFormat.SubjectPublicKeyInfo
-            ).decode().strip().replace('-----BEGIN PUBLIC KEY-----\n', '').replace('\n-----END PUBLIC KEY-----', '')
+            ).decode().strip().replace('-----BEGIN PUBLIC KEY-----\n', '').replace('\n-----END PUBLIC KEY-----', ''),
+            "has_set_pin": False,
         }
         
         wallets_collection.insert_one(wallet_data)

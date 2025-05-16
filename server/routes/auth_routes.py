@@ -88,12 +88,17 @@ def set_pin():
     if not wallet:
         return jsonify({"error": "Wallet not found for account number"}), 404
     
-    hashed_pin = hash_pin(pin)
-
-    # Save PIN (optional: hash it for security)
+    # Update has_set_pin to True
     wallets_collection.update_one(
         {"_id": wallet["_id"]},
-        {"$set": {"pin": hashed_pin}}  # 🔐 In production, hash the PIN!
+        {"$set": {"has_set_pin": True}}
+    )
+    
+    hashed_pin = hash_pin(pin)
+
+    wallets_collection.update_one(
+        {"_id": wallet["_id"]},
+        {"$set": {"pin": hashed_pin}}
     )
 
     return jsonify({
