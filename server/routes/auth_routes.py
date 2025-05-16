@@ -7,6 +7,7 @@ from db import wallets_collection
 from utils.hashed import hash_pin
 from utils.hashed import verify_pin
 import base64
+import jwt
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -65,7 +66,23 @@ def login():
         return jsonify({"error": "Invalid password."}), 401
 
     token = generate_token(account_number)
-    return jsonify({"token": token}), 200
+    return jsonify({"token": token, "hasSetPin": wallet_data['has_set_pin']}), 200
+
+@auth_bp.route("/validate-token", methods=["GET"])
+def validate_token():
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        return jsonify({"message": "No token provided"}), 401
+
+    token = auth_header.split(" ")[1]
+
+    try:
+        decoded = decode_token(token)
+        return jsonify({"valid": True, "email": decoded["account_number"]})
+    except jwt.ExpiredSignatureError:
+        return jsonify({"message": "Token expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"message": "Invalid token"}), 403
 
 @auth_bp.route("/set-pin", methods=["POST"])
 def set_pin():
