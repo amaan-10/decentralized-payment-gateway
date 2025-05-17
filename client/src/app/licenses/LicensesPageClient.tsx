@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   CalendarIcon,
   ChevronRight,
+  FileText,
   Mail,
   MapPin,
   Phone,
@@ -24,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 // License data
 const licenses = [
@@ -384,7 +386,7 @@ export default function LicensesPageClient() {
     { id: "license-types", title: "License Types" },
     { id: "third-party", title: "Third-Party Software" },
     { id: "version-history", title: "Version History" },
-        { id: "contact", title: "Contact Information" },
+    { id: "contact", title: "Contact Information" },
   ];
 
   const [activeSection, setActiveSection] = useState<string>("");
@@ -479,29 +481,52 @@ export default function LicensesPageClient() {
                 </li>
               ))}
             </ul>
-            <div className="mt-6">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
-                onClick={() => window.print()}
-              >
-                <Printer className="h-4 w-4 mr-2" />
-                Print Document
-              </Button>
+            <div className="pt-4 mt-4">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Related Documents</span>
+                </div>
+                <ul className="space-y-2 text-sm">
+                  <li>
+                    <Link
+                      href="/privacy"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/terms"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      Terms of Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/cookies"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      Cookies
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
           </nav>
         </aside>
 
         <main className="lg:col-span-3">
           <section id="introduction" className="scroll-mt-10 mb-10">
-            <h2 className="text-xl font-semibold mb-4">Introduction</h2>
+            <h2 className="text-2xl font-bold mb-4">Introduction</h2>
             <div className="space-y-4">
               <p className="text-muted-foreground mb-4">
-                DePay is built using various open source software
-                components, each with its own license. This page provides
-                information about the third-party open source software packages
-                used in DePay, along with their respective licenses.
+                DePay is built using various open source software components,
+                each with its own license. This page provides information about
+                the third-party open source software packages used in DePay,
+                along with their respective licenses.
               </p>
               <p className="text-muted-foreground mb-4">
                 We are grateful to the developers who have contributed to these
@@ -514,7 +539,9 @@ export default function LicensesPageClient() {
           </section>
 
           <section id="license-types" className="scroll-mt-10 mb-10">
-            <h2 className="text-xl font-semibold mb-4">License Types</h2>
+            <Separator />
+            <br />
+            <h2 className="text-2xl font-bold mb-4">License Types</h2>
             <div className="space-y-4">
               <div className="space-y-4">
                 <p className="text-muted-foreground mb-4">
@@ -551,7 +578,9 @@ export default function LicensesPageClient() {
           </section>
 
           <section id="third-party" className="scroll-mt-10 mb-10">
-            <h2 className="text-xl font-semibold mb-4">Third-Party Software</h2>
+            <Separator />
+            <br />
+            <h2 className="text-2xl font-bold mb-4">Third-Party Software</h2>
             <div className="space-y-4">
               <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
@@ -638,17 +667,19 @@ export default function LicensesPageClient() {
                 )}
 
                 <p className="text-sm text-muted-foreground mt-4">
-                  This list may not be exhaustive. DePay may include other
-                  open source software components not listed here. If you
-                  believe a component is missing or incorrectly attributed,
-                  please contact us.
+                  This list may not be exhaustive. DePay may include other open
+                  source software components not listed here. If you believe a
+                  component is missing or incorrectly attributed, please contact
+                  us.
                 </p>
               </div>
             </div>
           </section>
 
           <section id="version-history" className="scroll-mt-10 mb-10">
-            <h2 className="text-xl font-semibold mb-4">Version History</h2>
+            <Separator />
+            <br />
+            <h2 className="text-2xl font-bold mb-4">Version History</h2>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -672,7 +703,9 @@ export default function LicensesPageClient() {
           </section>
 
           <section id="contact" className="scroll-mt-10 mt-10">
-            <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+            <Separator />
+            <br />
+            <h2 className="text-2xl font-bold mb-4">Contact Information</h2>
             <p className="text-muted-foreground mb-4">
               If you have any questions about this policy, please contact us:
             </p>
@@ -739,8 +772,8 @@ export default function LicensesPageClient() {
             </div>
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} DePay. All rights reserved.
-              <br/>
-              <br/>
+              <br />
+              <br />
               This document is subject to change. Please check back regularly
               for updates.
             </p>

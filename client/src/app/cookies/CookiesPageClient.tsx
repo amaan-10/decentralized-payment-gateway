@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { Separator } from "@/components/ui/separator";
 
 export default function CookiesPageClient() {
   const cookiesSections = [
@@ -124,7 +125,7 @@ export default function CookiesPageClient() {
                   <ul className="space-y-2 text-sm">
                     <li>
                       <Link
-                        href="/legal/privacy"
+                        href="/privacy"
                         className="text-muted-foreground hover:text-primary"
                       >
                         Privacy Policy
@@ -132,7 +133,7 @@ export default function CookiesPageClient() {
                     </li>
                     <li>
                       <Link
-                        href="/legal/terms"
+                        href="/terms"
                         className="text-muted-foreground hover:text-primary"
                       >
                         Terms of Service
@@ -140,7 +141,7 @@ export default function CookiesPageClient() {
                     </li>
                     <li>
                       <Link
-                        href="/legal/licenses"
+                        href="/licenses"
                         className="text-muted-foreground hover:text-primary"
                       >
                         Licenses
@@ -160,9 +161,9 @@ export default function CookiesPageClient() {
               <Alert className="border-primary/20 bg-primary/5">
                 <Cookie className="h-4 w-4 text-primary" />
                 <AlertDescription>
-                  This Cookie Policy explains how DePay uses cookies and
-                  similar technologies to recognize and remember you when you
-                  visit our platform.
+                  This Cookie Policy explains how DePay uses cookies and similar
+                  technologies to recognize and remember you when you visit our
+                  platform.
                 </AlertDescription>
               </Alert>
 
@@ -207,6 +208,8 @@ export default function CookiesPageClient() {
 
             {/* What Are Cookies Section */}
             <section id="what-are-cookies" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">
                 What Are Cookies
               </h2>
@@ -219,6 +222,8 @@ export default function CookiesPageClient() {
 
             {/* Cookie Types Section */}
             <section id="cookie-types" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">
                 Types of Cookies
               </h2>
@@ -232,6 +237,8 @@ export default function CookiesPageClient() {
 
             {/* Cookies We Use Section */}
             <section id="cookies-we-use" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">
                 Cookies We Use
               </h2>
@@ -248,6 +255,8 @@ export default function CookiesPageClient() {
 
             {/* Third-Party Cookies Section */}
             <section id="third-party" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">
                 Third-Party Cookies
               </h2>
@@ -259,6 +268,8 @@ export default function CookiesPageClient() {
 
             {/* Managing Preferences Section */}
             <section id="manage-preferences" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">
                 Managing Preferences
               </h2>
@@ -271,6 +282,8 @@ export default function CookiesPageClient() {
 
             {/* Policy Updates Section */}
             <section id="updates" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">
                 Policy Updates
               </h2>
@@ -283,6 +296,8 @@ export default function CookiesPageClient() {
 
             {/* Contact Us Section */}
             <section id="contact" className="space-y-6 scroll-mt-10">
+              <Separator />
+
               <h2 className="text-2xl font-bold tracking-tight">Contact Us</h2>
               <p className="text-muted-foreground">
                 If you have any questions about our Cookie Policy, please
