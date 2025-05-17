@@ -497,7 +497,7 @@ export default function SettingsPage() {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "cryptoflow-settings.json";
+    a.download = "depay-settings.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -3603,7 +3603,7 @@ export default function SettingsPage() {
               <div className="p-6 glass border border-blue-900/30 rounded-lg flex flex-col items-center justify-center">
                 <FileText className="h-12 w-12 text-blue-400 mb-4" />
                 <p className="text-blue-200 text-center mb-6">
-                  Select a CryptoFlow settings file to import
+                  Select a DePay settings file to import
                 </p>
                 <Input
                   type="file"

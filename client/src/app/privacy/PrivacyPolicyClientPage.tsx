@@ -1,6 +1,13 @@
 "use client";
 import Link from "next/link";
-import { ArrowLeft, Check, FileText, Shield } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  ChevronRight,
+  FileText,
+  Printer,
+  Shield,
+} from "lucide-react";
 
 import {
   Accordion,
@@ -22,8 +29,55 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
 
 export default function PrivacyPolicyClientPage() {
+  // Table of contents sections
+  const PrivacyPolicySections = [
+    { id: "overview", title: "Overview" },
+    { id: "information-collected", title: "Information We Collect" },
+    { id: "how-we-use", title: "How We Use Your Information" },
+    { id: "information-sharing", title: "Information Sharing" },
+    { id: "security", title: "Security" },
+    { id: "your-rights", title: "Your Rights" },
+    { id: "international", title: "International Transfers" },
+    { id: "updates", title: "Policy Updates" },
+    { id: "contact", title: "Contact Us" },
+  ];
+
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sectionElements = PrivacyPolicySections.map((section) => {
+        const element = document.getElementById(section.id);
+        if (!element) return { id: section.id, top: 0 };
+        return {
+          id: section.id,
+          top: element.getBoundingClientRect().top,
+        };
+      });
+
+      // Find the first section that's above the middle of the viewport
+      const currentSection = sectionElements
+        .filter((section) => section.top <= 300)
+        .slice(-1)[0];
+
+      if (currentSection) {
+        setActiveSection(currentSection.id);
+      } else if (sectionElements.length > 0) {
+        setActiveSection(sectionElements[0].id);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Call once on mount
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [PrivacyPolicySections]);
+
   return (
     <div className="container max-w-4xl py-10 pt-32">
       <div className="mb-8 flex flex-col space-y-3">
@@ -53,83 +107,37 @@ export default function PrivacyPolicyClientPage() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="hidden lg:col-span-3 lg:block">
-          <div className="sticky top-20">
+          <div className="sticky top-10">
             <div className="space-y-4">
-              <div className="font-medium">On this page</div>
-              <ul className="space-y-2 text-sm">
-                <li>
+              <div className="font-semibold">Table of Contents</div>
+              <ul className="space-y-1">
+              {PrivacyPolicySections.map((section) => (
+                <li key={section.id}>
                   <a
-                    href="#overview"
-                    className="text-muted-foreground hover:text-primary"
+                    href={`#${section.id}`}
+                    className={`flex items-center py-1 text-sm hover:text-primary transition-colors ${
+                      activeSection === section.id
+                        ? "text-primary font-medium"
+                        : "text-muted-foreground"
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById(section.id)?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }}
                   >
-                    Overview
+                    <ChevronRight
+                      className={`h-3 w-3 mr-1 transition-transform ${
+                        activeSection === section.id ? "rotate-90" : ""
+                      }`}
+                    />
+                    {section.title}
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#information-collected"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Information We Collect
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#how-we-use"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    How We Use Your Information
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#information-sharing"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Information Sharing
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#security"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Security
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#your-rights"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Your Rights
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#international"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    International Transfers
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#updates"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Policy Updates
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    Contact Us
-                  </a>
-                </li>
-              </ul>
+              ))}
+            </ul>
+            
               <div className="pt-4">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
@@ -173,7 +181,7 @@ export default function PrivacyPolicyClientPage() {
         <div className="lg:col-span-9">
           <div className="space-y-10">
             {/* Overview Section */}
-            <section id="overview" className="space-y-6 scroll-mt-32">
+            <section id="overview" className="space-y-6 scroll-mt-10">
               <Alert className="border-primary/20 bg-primary/5">
                 <Shield className="h-4 w-4 text-primary" />
                 <AlertDescription>
@@ -240,7 +248,7 @@ export default function PrivacyPolicyClientPage() {
             {/* Information We Collect */}
             <section
               id="information-collected"
-              className="space-y-6 scroll-mt-32"
+              className="space-y-6 scroll-mt-10"
             >
               <Separator />
               <div className="space-y-4">
@@ -326,7 +334,7 @@ export default function PrivacyPolicyClientPage() {
             </section>
 
             {/* How We Use Your Information */}
-            <section id="how-we-use" className="space-y-6 scroll-mt-32">
+            <section id="how-we-use" className="space-y-6 scroll-mt-10">
               <Separator />
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">
@@ -392,7 +400,7 @@ export default function PrivacyPolicyClientPage() {
             {/* Information Sharing */}
             <section
               id="information-sharing"
-              className="space-y-6 scroll-mt-32"
+              className="space-y-6 scroll-mt-10"
             >
               <Separator />
               <div className="space-y-4">
@@ -461,7 +469,7 @@ export default function PrivacyPolicyClientPage() {
             </section>
 
             {/* Security Section */}
-            <section id="security" className="space-y-6 scroll-mt-32">
+            <section id="security" className="space-y-6 scroll-mt-10">
               <Separator />
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">Security</h2>
@@ -523,7 +531,7 @@ export default function PrivacyPolicyClientPage() {
             </section>
 
             {/* Your Rights */}
-            <section id="your-rights" className="space-y-6 scroll-mt-32">
+            <section id="your-rights" className="space-y-6 scroll-mt-10">
               <Separator />
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">
@@ -613,7 +621,7 @@ export default function PrivacyPolicyClientPage() {
             </section>
 
             {/* International Transfers */}
-            <section id="international" className="space-y-6 scroll-mt-32">
+            <section id="international" className="space-y-6 scroll-mt-10">
               <Separator />
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">
@@ -641,7 +649,7 @@ export default function PrivacyPolicyClientPage() {
             </section>
 
             {/* Policy Updates */}
-            <section id="updates" className="space-y-6 scroll-mt-32">
+            <section id="updates" className="space-y-6 scroll-mt-10">
               <Separator />
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">
@@ -667,7 +675,7 @@ export default function PrivacyPolicyClientPage() {
             </section>
 
             {/* Contact Us */}
-            <section id="contact" className="space-y-6 scroll-mt-32">
+            <section id="contact" className="space-y-6 scroll-mt-10">
               <Separator />
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">
@@ -685,7 +693,8 @@ export default function PrivacyPolicyClientPage() {
                       privacy@depay.com
                     </div>
                     <div>
-                      <span className="font-medium">Address:</span> Kharadi, Pune - 411014, Maharashtra, India
+                      <span className="font-medium">Address:</span> Kharadi,
+                      Pune - 411014, Maharashtra, India
                     </div>
                     <div>
                       <span className="font-medium">
@@ -731,6 +740,10 @@ export default function PrivacyPolicyClientPage() {
               </div>
               <p className="text-xs text-muted-foreground">
                 © {new Date().getFullYear()} DePay. All rights reserved.
+                <br />
+                <br />
+                This document is subject to change. Please check back regularly
+                for updates.
               </p>
             </div>
           </div>

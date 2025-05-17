@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import TermsOfServicePageClient from "./TermsOfServicePageClient";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | CryptoFlow",
+  title: "Terms of Service | DePay",
   description:
-    "CryptoFlow Terms of Service - The agreement between you and CryptoFlow when using our platform.",
+    "DePay Terms of Service - The agreement between you and DePay when using our platform.",
 };
 
 export default function TermsOfServicePage() {
