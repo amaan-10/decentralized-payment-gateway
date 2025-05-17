@@ -86,7 +86,14 @@ export function MainNav() {
   };
 
   // Don't show the main header in dashboard or auth routes
-  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/auth")) {
+  if (
+    pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/auth") ||
+    pathname?.startsWith("/privacy") ||
+    pathname?.startsWith("/terms") ||
+    pathname?.startsWith("/cookies") ||
+    pathname?.startsWith("/licenses")
+  ) {
     return null;
   }
 

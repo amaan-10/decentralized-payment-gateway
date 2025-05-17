@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const checkSession = async () => {
       try {
         // Simulate fetching user from API/localStorage
-        const storedUser = localStorage.getItem("cryptoflow_user");
+        const storedUser = localStorage.getItem("depay_user");
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         }
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setUser(mockUser);
-      localStorage.setItem("cryptoflow_user", JSON.stringify(mockUser));
+      localStorage.setItem("depay_user", JSON.stringify(mockUser));
       router.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       setUser(mockUser);
-      localStorage.setItem("cryptoflow_user", JSON.stringify(mockUser));
+      localStorage.setItem("depay_user", JSON.stringify(mockUser));
       router.push("/dashboard");
     } catch (error) {
       console.error("Signup failed:", error);
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("cryptoflow_user");
+    localStorage.removeItem("depay_user");
     router.push("/");
   };
 
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (user) {
       const updatedUser = { ...user, walletAddress: address };
       setUser(updatedUser);
-      localStorage.setItem("cryptoflow_user", JSON.stringify(updatedUser));
+      localStorage.setItem("depay_user", JSON.stringify(updatedUser));
     }
   };
 
