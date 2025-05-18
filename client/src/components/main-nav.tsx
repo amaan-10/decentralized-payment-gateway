@@ -79,8 +79,6 @@ export function MainNav() {
     setIsLoggedIn(false);
   };
 
-  console.log(isLoggedIn);
-
   const isActive = (path: string) => {
     return pathname === path;
   };
@@ -181,19 +179,25 @@ export function MainNav() {
 
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-4">
-                {/* <ThemeToggle /> */}
-                <Link
-                  href="/dashboard"
-                  className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
-                >
-                  <LayoutDashboard className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="/settings"
-                  className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
-                >
-                  <Settings className="w-5 h-5" />
-                </Link>
+                {isLoggedIn ? (
+                  <>
+                    {/* <ThemeToggle /> */}
+                    <Link
+                      href="/dashboard"
+                      className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
+                    >
+                      <LayoutDashboard className="w-5 h-5" />
+                    </Link>
+                    <Link
+                      href="/settings"
+                      className="p-2 rounded-full bg-blue-900/20 hover:bg-blue-900/40 transition-colors"
+                    >
+                      <Settings className="w-5 h-5" />
+                    </Link>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
 
               <div className="hidden sm:block">

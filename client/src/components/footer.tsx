@@ -68,7 +68,7 @@ export function Footer() {
                 (item) => (
                   <li key={item}>
                     <Link
-                      href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       {item}
@@ -154,7 +154,7 @@ export function Footer() {
               Terms of Service
             </Link>
             <Link
-              href="#"
+              href="/cookies"
               className="text-gray-500 hover:text-white text-sm transition-colors"
             >
               Cookies Settings
