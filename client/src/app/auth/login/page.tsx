@@ -33,10 +33,12 @@ export default function LoginPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
+    const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
+
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/login",
-        // "https://api-depayment.vercel.app/api/auth/login",
+        // `http://localhost:5000/api/auth/login`,
+        `${API_URL}/api/auth/login`,
         {
           method: "POST",
           headers: {

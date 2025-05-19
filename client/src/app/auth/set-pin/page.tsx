@@ -57,6 +57,7 @@ export default function SetPinPage() {
     useRef<HTMLInputElement>(null!),
     useRef<HTMLInputElement>(null!),
   ];
+  const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
 
   // Check if biometric authentication is available
   useEffect(() => {
@@ -121,7 +122,7 @@ export default function SetPinPage() {
                   try {
                     const response = await fetch(
                       // "http://localhost:5000/api/auth/set-pin",
-                      "https://api-depayment.vercel.app/api/auth/set-pin",
+                      `${API_URL}/api/auth/set-pin`,
                       {
                         method: "POST",
                         headers: {
