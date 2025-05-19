@@ -34,6 +34,8 @@ export function MainNav() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
+
   // Validate token on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -46,8 +48,8 @@ export function MainNav() {
 
     // Call backend to verify token
     fetch(
-      "http://localhost:5000/api/auth/validate-token",
-      // "https://api-depayment.vercel.app/api/auth/validate-token",
+      // "http://localhost:5000/api/auth/validate-token",
+      `${API_URL}/api/auth/validate-token`,
       {
         method: "GET",
         headers: {
@@ -77,6 +79,7 @@ export function MainNav() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    alert("You have been logged out.");
   };
 
   const isActive = (path: string) => {
