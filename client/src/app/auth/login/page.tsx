@@ -55,6 +55,10 @@ export default function LoginPage() {
 
       localStorage.setItem("token", result.token);
 
+      document.cookie = `authToken=${result.token}; path=/; max-age=${
+        7 * 24 * 60 * 60
+      }; secure; samesite=strict`;
+
       if (!res.ok) {
         throw new Error(result.error || "Something went wrong");
       }
