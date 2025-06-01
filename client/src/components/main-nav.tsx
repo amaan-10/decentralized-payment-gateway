@@ -126,19 +126,22 @@ export function MainNav() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center">
                   <DropdownMenuItem asChild>
-                    <Link href="/features" className="cursor-pointer">
+                    <Link href="/features/#security" className="cursor-pointer">
                       <Lock className="mr-2 h-4 w-4" />
                       <span>Security</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/features" className="cursor-pointer">
+                    <Link href="/features/#speed" className="cursor-pointer">
                       <Zap className="mr-2 h-4 w-4" />
                       <span>Speed</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/features" className="cursor-pointer">
+                    <Link
+                      href="/features/#smart-contracts"
+                      className="cursor-pointer"
+                    >
                       <TagIcon className="mr-2 h-4 w-4" />
                       <span>Smart Contracts</span>
                     </Link>
