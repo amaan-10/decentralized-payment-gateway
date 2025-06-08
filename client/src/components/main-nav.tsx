@@ -27,10 +27,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useToast } from "@/hooks/use-toast";
 
 export function MainNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { toast } = useToast();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -79,7 +81,12 @@ export function MainNav() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    alert("You have been logged out.");
+    // alert("You have been logged out.");
+    toast({
+      description: "You have been logged out.",
+      variant: "destructive",
+      duration: 2000,
+    });
   };
 
   const isActive = (path: string) => {

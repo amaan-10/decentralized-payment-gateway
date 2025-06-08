@@ -134,10 +134,22 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
               placeholder="0"
               onInput={(e) => {
                 const target = e.target as HTMLInputElement;
-                target.style.width = `${(target.value.length + 1) * 1}ch`;
+                target.style.width = `${Math.min(
+                  target.value.length || 1,
+                  6
+                )}ch`;
               }}
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                let input = e.target.value.replace(/,/g, ""); // remove commas
+                let numericValue = parseInt(input || "0");
+
+                if (isNaN(numericValue)) return;
+
+                if (numericValue <= 500000) {
+                  setAmount(numericValue.toString());
+                }
+              }}
             />
           </div>
 

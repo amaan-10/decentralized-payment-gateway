@@ -64,25 +64,23 @@ export function Footer() {
           <div className="flex flex-col items-end">
             <h3 className="font-bold text-lg mb-4">Product</h3>
             <ul className="space-y-3 text-end">
-              {["Features", "Security", "Roadmap", "Pricing", "API Docs"].map(
-                (item) => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                )
-              )}
+              {["Features", "Security", "Pricing", "API Docs"].map((item) => (
+                <li key={item}>
+                  <Link
+                    href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className="flex flex-col items-end">
-            <h3 className="font-bold text-lg mb-4">Company</h3>
+            <h3 className="font-bold text-lg mb-4">Info</h3>
             <ul className="space-y-3 text-end">
-              {["About", "Blog", "Careers", "Press", "Partners"].map((item) => (
+              {["About", "Blog", "Vision", "Values"].map((item) => (
                 <li key={item}>
                   <Link
                     href={`/${item.toLowerCase()}`}
@@ -120,18 +118,16 @@ export function Footer() {
           <div className="flex flex-col items-end">
             <h3 className="font-bold text-lg mb-4">Legal</h3>
             <ul className="space-y-3 text-end">
-              {["Privacy", "Terms", "Cookies", "Licenses", "Settings"].map(
-                (item) => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase()}`}
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                )
-              )}
+              {["Privacy", "Terms", "Cookies", "Licenses"].map((item) => (
+                <li key={item}>
+                  <Link
+                    href={`/${item.toLowerCase()}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
