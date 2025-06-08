@@ -20,10 +20,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,16 +65,26 @@ export default function LoginPage() {
         throw new Error(result.error || "Something went wrong");
       }
 
-      alert("Login successful");
+      // alert("Login successful");
+      toast({
+        description: "Login successful.",
+        duration: 1700,
+      });
 
       // optionally redirect or reset the form
-      if (result.hasSetPin === false) {
-        window.location.href = "/auth/set-pin";
-      } else {
-        window.location.href = "/";
-      }
+      setTimeout(() => {
+        if (result.hasSetPin === false) {
+          window.location.href = "/auth/set-pin";
+        } else {
+          window.location.href = "/";
+        }
+      }, 2000);
     } catch (err: any) {
-      alert(err.message);
+      toast({
+        description: `Error: ${err.message || "Something went wrong"}`,
+        variant: "destructive",
+      });
+      // alert(err.message);
     } finally {
       setIsLoading(false);
     }
