@@ -18,6 +18,7 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
   const [showAmountPrompt, setShowAmountPrompt] = useState(false);
   const [scannedAccount, setScannedAccount] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
+  const [amountError, setAmountError] = useState("");
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReaderRef = useRef<BrowserQRCodeReader | null>(null);
@@ -129,33 +130,52 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
               ₹
             </span>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
               className="inline-flex min-w-4 w-10 bg-transparent border-none focus-visible:outline-none focus-visible:border-none focus-visible:ring-0 text-4xl font-bold min-h-[3rem] text-gray-800 dark:text-gray-100"
               placeholder="0"
               onInput={(e) => {
                 const target = e.target as HTMLInputElement;
                 target.style.width = `${Math.min(
                   target.value.length || 1,
-                  6
+                  7
                 )}ch`;
               }}
-              value={amount}
+              value={amount ? Number(amount).toLocaleString("en-IN") : ""}
               onChange={(e) => {
-                let input = e.target.value.replace(/,/g, ""); // remove commas
+                let input = e.target.value.replace(/,/g, "");
                 let numericValue = parseInt(input || "0");
 
                 if (isNaN(numericValue)) return;
 
-                if (numericValue <= 500000) {
+                if (numericValue > 500000) {
+                  setAmountError("Amount cannot exceed ₹5,00,000");
+                } else {
+                  setAmountError("");
                   setAmount(numericValue.toString());
                 }
               }}
             />
           </div>
+          {amountError && (
+            <p className="text-red-400 text-md mt-1 text-center font-sans">
+              {amountError}
+            </p>
+          )}
 
           <div className="flex justify-end">
             <Button
-              onClick={handleAmountSubmit}
+              onClick={() => {
+                if (
+                  amount === "" ||
+                  amount === "0" ||
+                  parseInt(amount) > 500000
+                ) {
+                  setAmountError("Amount cannot be less than ₹1");
+                  return;
+                }
+                handleAmountSubmit();
+              }}
               className="bg-purple-600 hover:bg-purple-700 text-white py-4 px-3"
             >
               <ArrowRight className="h-4 w-4" />
