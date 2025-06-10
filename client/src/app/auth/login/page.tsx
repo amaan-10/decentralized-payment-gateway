@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,9 +58,12 @@ export default function LoginPage() {
 
       localStorage.setItem("token", result.token);
 
-      document.cookie = `authToken=${result.token}; path=/; max-age=${
-        7 * 24 * 60 * 60
-      }; secure; samesite=strict`;
+      Cookies.set("authToken", result.token, {
+        path: "/",
+        expires: 7, // days
+        secure: true,
+        sameSite: "Strict",
+      });
 
       if (!res.ok) {
         throw new Error(result.error || "Something went wrong");

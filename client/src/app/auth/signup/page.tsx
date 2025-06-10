@@ -33,6 +33,7 @@ export default function SignupPage() {
     const formData = new FormData(e.currentTarget);
     const firstName = formData.get("firstName") as string;
     const lastName = formData.get("lastName") as string;
+    const fullName = formData.get("fullName") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
@@ -47,8 +48,8 @@ export default function SignupPage() {
 
     try {
       const res = await fetch(
-        // "http://localhost:5000/api/auth/signup",
-        `${API_URL}/api/auth/signup`,
+        "http://localhost:5000/api/auth/signup",
+        // `${API_URL}/api/auth/signup`,
         {
           method: "POST",
           headers: {
@@ -57,6 +58,7 @@ export default function SignupPage() {
           body: JSON.stringify({
             firstName,
             lastName,
+            fullName,
             email,
             password,
           }),
@@ -155,6 +157,19 @@ export default function SignupPage() {
                         className="bg-blue-950/20 border-blue-900/50"
                       />
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">
+                      Full Name (as per Government ID)
+                    </Label>
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      placeholder="John Michael Doe"
+                      required
+                      className="bg-blue-950/20 border-blue-900/50"
+                    />
                   </div>
 
                   <div className="space-y-2">
