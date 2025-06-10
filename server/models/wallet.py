@@ -7,13 +7,14 @@ from utils.crypto_utils import generate_keys, serialize_private_key
 from cryptography.hazmat.primitives import serialization
 
 class Wallet:
-    def __init__(self, password, firstname, lastname, email):
+    def __init__(self, password, firstname, lastname, fullname, email):
         # Generate a 12-digit unique account number
         self.account_number = self.generate_unique_account_number()
         self.private_key, self.public_key = generate_keys() 
         self.password = password
         self.firstname = firstname
-        self.lastname = lastname  
+        self.lastname = lastname
+        self.fullname = fullname
         self.email = email
         self.balance = 0
         self.created_at = datetime.now()  
@@ -31,6 +32,7 @@ class Wallet:
             "account_number": self.account_number,
             "first_name": self.firstname,  
             "last_name": self.lastname,
+            "full_name": self.fullname,
             "email": self.email,
             "balance": self.balance,
             "created_at": self.created_at, 
