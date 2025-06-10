@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 interface QrCodeScannerProps {
-  onScan: (data: string) => void;
+  onScan: (data: string, note: string) => void;
 }
 
 export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
@@ -19,6 +19,15 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
   const [scannedAccount, setScannedAccount] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [amountError, setAmountError] = useState("");
+  const [note, setNote] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; // Reset height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set new height
+    }
+  }, [note]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReaderRef = useRef<BrowserQRCodeReader | null>(null);
@@ -63,7 +72,7 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
   const handleScan = (text: string) => {
     stopScanner();
     if (text.includes("|")) {
-      onScan(text);
+      onScan(text, note);
     } else {
       setScannedAccount(text);
       setShowAmountPrompt(true);
@@ -72,7 +81,7 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
 
   const handleAmountSubmit = () => {
     if (scannedAccount && amount) {
-      onScan(`${scannedAccount}|${amount}`);
+      onScan(`${scannedAccount}|${amount}`, note);
       setShowAmountPrompt(false);
       setScannedAccount(null);
       setAmount("");
@@ -162,6 +171,23 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
               {amountError}
             </p>
           )}
+
+          <div className="flex flex-col justify-center items-center">
+            <textarea
+              ref={textareaRef}
+              name="note"
+              placeholder="Add note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={1}
+              className="my-2 resize-none overflow-hidden bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-white text-xs text-center px-3 py-2 rounded-md"
+              style={{
+                width: `${Math.min(Math.max(note.length, 3) + 3, 40)}ch`,
+                maxWidth: "300px",
+                minWidth: "100px",
+              }}
+            />
+          </div>
 
           <div className="flex justify-end">
             <Button

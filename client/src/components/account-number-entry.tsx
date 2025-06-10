@@ -1,15 +1,14 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, CreditCard, DollarSign } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, CreditCard, DollarSign, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface AccountNumberEntryProps {
-  onSubmit: (accountNumber: string, amount: string) => void;
+  onSubmit: (accountNumber: string, amount: string, note: string) => void;
 }
 
 export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
@@ -20,6 +19,16 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
   const [loading, setLoading] = useState(false);
   const [amountError, setAmountError] = useState("");
   const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [note, setNote] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; // Reset height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set new height
+    }
+  }, [note]);
 
   const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
 
@@ -38,16 +47,14 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
     // setIsVerified(true);
 
     try {
-      // const res = await fetch(
-      //   `/api/accounts/verify?accountNumber=${accountNumber}`
-      // );
       const res = await fetch(
         `http://localhost:5000/api/accounts/verify?accountNumber=${accountNumber}`
         // `${API_URL}/api/accounts/verify?accountNumber=${accountNumber}`
       );
       const data = await res.json();
 
-      setName(data.name);
+      setName(data.first_name + " " + data.last_name);
+      setFullName(data.full_name);
 
       if (data.exists) {
         setIsVerified(true);
@@ -74,7 +81,7 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
     setErrors({ accountNumber: "", amount: amountError });
 
     if (!amountError) {
-      onSubmit(accountNumber, amount);
+      onSubmit(accountNumber, amount, note);
     }
   };
 
@@ -131,11 +138,15 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
             {/* Payment UI shown after account verification */}
             <div className="mt-6 bg-gray-800 p-4 rounded-lg shadow text-white">
               <div className="flex flex-col justify-center items-center">
-                <p className="mb-2">
-                  <strong>Paying to {name}</strong>{" "}
+                <p className="mb-1">
+                  <strong>Paying {name}</strong>{" "}
                 </p>
-                <p className="mb-2">
-                  Account no. <strong>{accountNumber}</strong>
+                <p className="mb-2 flex gap-2 text-sm">
+                  <ShieldCheck className="h-4 w-4 text-green-700" />{" "}
+                  {fullName.toUpperCase()}
+                </p>
+                <p className="mb-2 text-gray-400 text-sm">
+                  Account no. {accountNumber}
                 </p>
               </div>
 
@@ -177,6 +188,23 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
                 </p>
               )}
 
+              <div className="flex flex-col justify-center items-center">
+                <textarea
+                  ref={textareaRef}
+                  name="note"
+                  placeholder="Add note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  rows={1}
+                  className="my-2 resize-none overflow-hidden bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-white text-xs text-center px-3 py-2 rounded-md"
+                  style={{
+                    width: `${Math.min(Math.max(note.length, 3) + 3, 40)}ch`,
+                    maxWidth: "300px",
+                    minWidth: "100px",
+                  }}
+                />
+              </div>
+
               <div className="flex justify-end">
                 <Button
                   onClick={() => {
@@ -188,7 +216,7 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
                       setAmountError("Amount cannot be less than ₹1");
                       return;
                     }
-                    onSubmit(accountNumber, amount);
+                    onSubmit(accountNumber, amount, note);
                   }}
                   className="bg-purple-600 hover:bg-purple-700 text-white py-4 px-3"
                 >

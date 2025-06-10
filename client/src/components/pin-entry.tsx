@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Lock, CreditCard, IndianRupee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Cookies from "js-cookie";
 
 interface PinEntryProps {
   accountNumber: string;
@@ -18,6 +19,7 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
   const [pin, setPin] = useState(["", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [shake, setShake] = useState(false);
 
   // Focus the first input on mount
   useEffect(() => {
@@ -52,7 +54,7 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const fullPin = pin.join("");
@@ -61,7 +63,34 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
       return;
     }
 
-    onSubmit(fullPin);
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/verify-pin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("authToken")}`,
+        },
+        body: JSON.stringify({
+          pin: fullPin,
+        }),
+      });
+
+      const data = await res.json();
+      console.log(Cookies.get("authToken"));
+
+      if (!res.ok) {
+        setError(data.message || "PIN verification failed");
+        setShake(true); // Trigger shake animation
+        setTimeout(() => setShake(false), 500); // Reset shake state
+        return;
+      }
+
+      // If successful, call parent callback
+      onSubmit(fullPin);
+    } catch (err) {
+      alert("Network error. Please try again.");
+      console.error(err);
+    }
   };
 
   // Mask account number for display
@@ -93,7 +122,10 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
                 <span className="text-xs text-center text-gray-800 dark:text-gray-100">
                   ₹
                 </span>
-                {Number.parseFloat(amount).toFixed(2)}
+                {Number(amount).toLocaleString("en-IN", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </span>
             </div>
           </div>
@@ -111,8 +143,12 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  x: shake ? [0, -5, 5, -5, 5, 0] : 0,
+                }}
+                transition={{ duration: 0.4 }}
               >
                 <input
                   ref={(el) => {
@@ -124,7 +160,9 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
                   value={digit}
                   onChange={(e) => handlePinChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-12 h-14 text-center text-xl font-bold bg-gray-900 border-2 border-gray-700 focus:border-purple-500 rounded-lg text-white outline-none"
+                  className={`w-12 h-14 text-center text-xl font-bold bg-gray-900 border-2 ${
+                    error ? "border-red-500" : "border-gray-700"
+                  } focus:border-purple-500 rounded-lg text-white outline-none`}
                 />
               </motion.div>
             ))}

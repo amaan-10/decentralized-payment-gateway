@@ -9,6 +9,7 @@ import { QrCodeScanner } from "./qr-code-scanner";
 import { PinEntry } from "./pin-entry";
 import { ProcessingPayment } from "./processing-payment";
 import { PaymentResult } from "./payment-result";
+import Cookies from "js-cookie";
 
 type PaymentMethod = "account" | "qrcode" | null;
 type PaymentStatus = "idle" | "processing" | "success" | "failed";
@@ -18,25 +19,34 @@ export function PaymentFlow() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [accountNumber, setAccountNumber] = useState("");
   const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
   const [pin, setPin] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle");
+  const [txnID, setTxnID] = useState<string | null>(null);
+  const [txnTime, setTxnTime] = useState<string | null>(null);
 
   const handlePaymentMethodSelect = (method: PaymentMethod) => {
     setPaymentMethod(method);
     setStep(2);
   };
 
-  const handleDetailsSubmit = (accNumber: string, amt: string) => {
+  const handleDetailsSubmit = (
+    accNumber: string,
+    amt: string,
+    note: string
+  ) => {
     setAccountNumber(accNumber);
     setAmount(amt);
+    setNote(note);
     setStep(3);
   };
 
-  const handleQrCodeScanned = (data: string) => {
+  const handleQrCodeScanned = (data: string, note: string) => {
     // In a real app, parse the QR code data to extract account and amount
     const [accNumber, amt] = data.split("|");
     setAccountNumber(accNumber || "QR-1234567890");
     setAmount(amt || "150.00");
+    setNote(note);
     setStep(3);
   };
 
@@ -45,13 +55,44 @@ export function PaymentFlow() {
     setStep(4);
     setPaymentStatus("processing");
 
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/blockchain/transaction",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("authToken")}`,
+          },
+          body: JSON.stringify({
+            receiver_account: accountNumber,
+            amount: Number(amount),
+            note: note,
+            pin: enteredPin.toString(),
+          }),
+        }
+      );
 
-    // Randomly succeed or fail for demo purposes
-    const isSuccess = Math.random() > 0.3;
-    setPaymentStatus(isSuccess ? "success" : "failed");
-    setStep(5);
+      const data = await res.json();
+      console.log("Transaction response:", data);
+      setTxnID(data.txn_id);
+      setTxnTime(data.time);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      if (res.ok) {
+        setPaymentStatus("success");
+        setStep(5);
+        return;
+      } else {
+        setPaymentStatus("failed");
+        setStep(5);
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
+      setPaymentStatus("failed");
+      setStep(5);
+      console.error(err);
+    }
   };
 
   const resetPayment = () => {
@@ -157,6 +198,8 @@ export function PaymentFlow() {
                 status={paymentStatus as "processing" | "success" | "failed"}
                 amount={amount}
                 accountNumber={accountNumber}
+                transactionId={txnID ?? ""}
+                time={txnTime ? new Date(txnTime) : new Date()}
                 onReset={resetPayment}
               />
             </motion.div>

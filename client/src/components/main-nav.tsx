@@ -15,7 +15,6 @@ import {
   TagIcon,
   Wallet,
   Zap,
-  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Logo from "@/assets/logo";
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
+import Cookies from "js-cookie";
 
 export function MainNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,9 +38,9 @@ export function MainNav() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
 
-  // Validate token on mount
+  // Validate token from cookies
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("authToken");
 
     if (!token) {
       setIsLoggedIn(false);
@@ -48,29 +48,21 @@ export function MainNav() {
       return;
     }
 
-    // Call backend to verify token
-    fetch(
-      // "http://localhost:5000/api/auth/validate-token",
-      `${API_URL}/api/auth/validate-token`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`${API_URL}/api/auth/validate-token`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Invalid token");
-        }
+        if (!res.ok) throw new Error("Invalid token");
         return res.json();
       })
       .then(() => {
         setIsLoggedIn(true);
       })
       .catch(() => {
-        // Invalid token, clear it
-        localStorage.removeItem("token");
+        Cookies.remove("authToken");
         setIsLoggedIn(false);
       })
       .finally(() => {
@@ -79,9 +71,8 @@ export function MainNav() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("authToken");
     setIsLoggedIn(false);
-    // alert("You have been logged out.");
     toast({
       description: "You have been logged out.",
       variant: "destructive",
@@ -89,11 +80,8 @@ export function MainNav() {
     });
   };
 
-  const isActive = (path: string) => {
-    return pathname === path;
-  };
+  const isActive = (path: string) => pathname === path;
 
-  // Don't show the main header in dashboard or auth routes
   if (
     pathname?.startsWith("/dashboard") ||
     pathname?.startsWith("/auth") ||

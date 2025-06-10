@@ -17,6 +17,8 @@ interface PaymentResultProps {
   status: "processing" | "success" | "failed";
   amount: string;
   accountNumber: string;
+  transactionId: string;
+  time: Date;
   onReset: () => void;
 }
 
@@ -24,6 +26,8 @@ export function PaymentResult({
   status,
   amount,
   accountNumber,
+  transactionId,
+  time,
   onReset,
 }: PaymentResultProps) {
   // Launch confetti on successful payment
@@ -63,12 +67,12 @@ export function PaymentResult({
     }
   }, [status]);
 
-  // Format transaction ID
-  const transactionId =
-    "TXN" + Math.random().toString(36).substring(2, 10).toUpperCase();
+  // // Format transaction ID
+  // const transactionId =
+  //   "TXN" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
   // Format date
-  const date = new Date().toLocaleString("en-US", {
+  const date = time.toLocaleString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -128,7 +132,11 @@ export function PaymentResult({
           >
             <span className="text-2xl py-5 font-bold text-center min-h-[3rem] text-gray-800 dark:text-gray-100">
               ₹
-            </span>{Number.parseFloat(amount).toFixed(2)}
+            </span>
+            {Number(amount).toLocaleString("en-IN", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </motion.div>
         )}
       </div>
