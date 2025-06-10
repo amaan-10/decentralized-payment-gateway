@@ -3,6 +3,8 @@ from flask import Blueprint, request, jsonify
 from models.wallet import Wallet
 from utils.jwt_utils import generate_token
 from utils.jwt_utils import decode_token
+from utils.crypto_utils import serialize_private_key, generate_keys
+from cryptography.hazmat.primitives import serialization
 from db import wallets_collection
 from utils.hashed import hash_pin
 from utils.hashed import verify_pin
@@ -18,10 +20,11 @@ def signup():
     data = request.get_json()
     firstname = data.get("firstName")
     lastname = data.get("lastName")
+    fullname = data.get("fullName")
     email = data.get("email")
     password = data.get("password")
 
-    if not email or not firstname or not lastname or not password:
+    if not email or not firstname or not lastname or not fullname or not password:
         return jsonify({"error": "firstname, lastname, email, and password are required"}), 400
 
     # Validate password strength
@@ -35,7 +38,7 @@ def signup():
     if Wallet.find_by_email(email):
         return jsonify({"error": "An account with this email already exists"}), 409
 
-    wallet = Wallet(password, firstname, lastname, email)
+    wallet = Wallet(password, firstname, lastname, fullname, email)
     wallet.save_to_db()
     token = generate_token(wallet.account_number)
 
@@ -116,6 +119,22 @@ def set_pin():
     wallets_collection.update_one(
         {"_id": wallet["_id"]},
         {"$set": {"pin": hashed_pin}}
+    )
+
+    private_key, public_key = generate_keys() 
+
+    encrypted_private_key, salt = serialize_private_key(private_key, pin)
+
+    wallets_collection.update_many(
+        {"_id": wallet["_id"]},
+        {"$set": {
+            "encrypted_private_key": base64.b64encode(encrypted_private_key).decode(),
+            "salt": base64.b64encode(salt).decode(),
+            "public_key": public_key.public_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PublicFormat.SubjectPublicKeyInfo
+            ).decode().strip().replace('-----BEGIN PUBLIC KEY-----\n', '').replace('\n-----END PUBLIC KEY-----', ''),
+        }}
     )
 
     return jsonify({

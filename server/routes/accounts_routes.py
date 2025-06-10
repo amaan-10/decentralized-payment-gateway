@@ -17,7 +17,9 @@ def verify_account():
         return jsonify({
             "exists": True,
             "accountNumber": account_number,
-            "name": account["name"]
+            "first_name": account["first_name"],
+            "last_name": account["last_name"],
+            "full_name": account["full_name"]
         }), 200
     else:
         return jsonify({
