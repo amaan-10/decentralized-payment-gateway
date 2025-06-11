@@ -10,8 +10,10 @@ from utils.hashed import hash_pin
 from utils.hashed import verify_pin
 import base64
 import jwt
+from flask_cors import CORS
 
 auth_bp = Blueprint('auth', __name__)
+CORS(auth_bp, origins=["http://localhost:3000", "https://depayment.vercel.app"])
 
 import re
 
@@ -47,8 +49,10 @@ def signup():
         "token": token
     }), 201
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route("/login", methods=["POST", 'OPTIONS'])
 def login():
+    if request.method == 'OPTIONS':
+        return '', 204
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
