@@ -8,7 +8,7 @@ from routes.accounts_routes import accounts_bp
 app = Flask(__name__)
 
 CORS(app, 
-     origins=["http://localhost:3000", "https://depayment.vercel.app"],
+     origins=["http://localhost:3000", "https://api-depayment.vercel.app"],
      supports_credentials=True,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
      allow_headers=["Content-Type", "Authorization"])
