@@ -1,5 +1,5 @@
 #routes/auth_routes.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from models.wallet import Wallet
 from utils.jwt_utils import generate_token
 from utils.jwt_utils import decode_token
@@ -16,6 +16,14 @@ auth_bp = Blueprint('auth', __name__)
 CORS(auth_bp, origins=["http://localhost:3000", "https://depayment.vercel.app"])
 
 import re
+
+def _cors_response(body, status=200):
+    response = make_response(body, status)
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
@@ -73,7 +81,7 @@ def login():
         return jsonify({"error": "Invalid password."}), 401
 
     token = generate_token(account_number)
-    return jsonify({"token": token, "hasSetPin": wallet_data['has_set_pin']}), 200
+    return _cors_response(jsonify({"token": token, "hasSetPin": wallet_data['has_set_pin']}), 200)
 
 @auth_bp.route("/validate-token", methods=["GET"])
 def validate_token():
