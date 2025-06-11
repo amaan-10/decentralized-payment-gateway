@@ -49,9 +49,9 @@ def create_transaction():
     if not wallet_data:
         return jsonify({"error": "Sender wallet not found"}), 404
 
-    encrypted_pem = base64.b64decode(wallet_data['encrypted_private_key'])
-    salt = base64.b64decode(wallet_data['salt'])
-    private_key = decrypt_private_key(encrypted_pem, pin, salt)
+    encrypted_pem = base64.b64decode(wallet_data['encrypted_private_pin_key'])
+    salt_pin = base64.b64decode(wallet_data['salt'])
+    private_pin_key = decrypt_private_key(encrypted_pem, pin, salt_pin)
 
     sender_balance = wallet_data.get('balance', 0)
 
@@ -62,7 +62,7 @@ def create_transaction():
     if not receiver_wallet_data:
         return jsonify({"error": "Receiver wallet not found"}), 404    
 
-    tx = Transaction(sender, receiver, amount, note, private_key)
+    tx = Transaction(sender, receiver, amount, note, private_pin_key)
     tx.save_to_db()
     print("Transaction created:", tx.txn_id)
 

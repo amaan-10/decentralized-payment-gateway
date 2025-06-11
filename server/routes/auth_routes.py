@@ -96,6 +96,9 @@ def set_pin():
     account_number = decoded["account_number"]
     pin = data.get("pin")
 
+    print(f"Setting PIN for account number: {account_number}")
+    print(f"Received PIN: {pin}")
+
     # Input validation
     if not account_number or not pin:
         return jsonify({"error": "Account Number, and 4-digit PIN are required"}), 400
@@ -121,21 +124,18 @@ def set_pin():
         {"$set": {"pin": hashed_pin}}
     )
 
-    private_key, public_key = generate_keys() 
+    private_pin_key, public_pin_key = generate_keys() 
 
-    encrypted_private_key, salt = serialize_private_key(private_key, pin)
+    encrypted_private_pin_key, salt_pin = serialize_private_key(private_pin_key, pin)
 
-    wallets_collection.update_many(
-        {"_id": wallet["_id"]},
-        {"$set": {
-            "encrypted_private_key": base64.b64encode(encrypted_private_key).decode(),
-            "salt": base64.b64encode(salt).decode(),
-            "public_key": public_key.public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-            ).decode().strip().replace('-----BEGIN PUBLIC KEY-----\n', '').replace('\n-----END PUBLIC KEY-----', ''),
-        }}
-    )
+    wallets_collection.insert_one({
+        "encrypted_private_pin_key": base64.b64encode(encrypted_private_pin_key).decode(),
+        "salt_pin": base64.b64encode(salt_pin).decode(),
+        "public_pin_key": public_pin_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        ).decode().strip().replace('-----BEGIN PUBLIC KEY-----\n', '').replace('\n-----END PUBLIC KEY-----', '')
+    })
 
     return jsonify({
         "message": "PIN successfully set",
