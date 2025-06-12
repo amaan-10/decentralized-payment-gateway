@@ -49,8 +49,7 @@ def signup():
         "token": token
     }), 201
 
-@auth_bp.route("/login", methods=["OPTIONS"])
-@cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
+@auth_bp.route("/login", methods=["POST","OPTIONS"])
 def login():
     data = request.get_json()
     email = data.get("email")
@@ -72,7 +71,18 @@ def login():
         return jsonify({"error": "Invalid password."}), 401
 
     token = generate_token(account_number)
-    return jsonify({"token": token, "hasSetPin": wallet_data['has_set_pin']}), 200
+    
+    response = jsonify({
+        "token": token,
+        "hasSetPin": wallet_data['has_set_pin']
+    })
+
+    response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+    response.headers.add("Access-Control-Allow-Credentials", "true")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+
+    return response
 
 @auth_bp.route("/validate-token", methods=["GET"])
 @cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
