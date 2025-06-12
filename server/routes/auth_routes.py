@@ -49,7 +49,7 @@ def signup():
         "token": token
     }), 201
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route("/login", methods=["OPTIONS"])
 @cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
 def login():
     data = request.get_json()
