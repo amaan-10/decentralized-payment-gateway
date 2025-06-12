@@ -31,6 +31,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { BASE_URL } from "@/lib/url";
 
 export default function SetPinPage() {
   // States for PIN entry
@@ -57,7 +58,6 @@ export default function SetPinPage() {
     useRef<HTMLInputElement>(null!),
     useRef<HTMLInputElement>(null!),
   ];
-  const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
 
   // Check if biometric authentication is available
   useEffect(() => {
@@ -121,8 +121,7 @@ export default function SetPinPage() {
                 const sendPinToBackend = async () => {
                   try {
                     const response = await fetch(
-                      // "http://localhost:5000/api/auth/set-pin",
-                      `${API_URL}/api/auth/set-pin`,
+                      `${BASE_URL}/api/auth/set-pin`,
                       {
                         method: "POST",
                         headers: {

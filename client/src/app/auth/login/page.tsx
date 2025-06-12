@@ -22,6 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import Cookies from "js-cookie";
+import { BASE_URL } from "@/lib/url";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,12 +37,10 @@ export default function LoginPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
 
     try {
       const res = await fetch(
-        // `http://localhost:5000/api/auth/login`,
-        `${API_URL}/api/auth/login`,
+        `${BASE_URL}/api/auth/login`,
         {
           method: "POST",
           headers: {
