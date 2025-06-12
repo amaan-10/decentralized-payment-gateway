@@ -7,15 +7,16 @@ from utils.crypto_utils import decrypt_private_key
 from utils.jwt_utils import decode_token
 from db import transactions_collection
 import base64
-import random
-import string
-from datetime import datetime
-import pytz
+from flask_cors import cross_origin
 
 blockchain_bp = Blueprint('blockchain', __name__)
 bank_chain = Blockchain()
 
-@blockchain_bp.route("/transaction", methods=["POST"])
+@blockchain_bp.route("/transaction", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def create_transaction():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)
@@ -26,18 +27,6 @@ def create_transaction():
     amount = data.get("amount")
     note = data.get("note")
     pin = data.get("pin")
-
-    print(
-"sender_account: ",
-    sender,
-    "\nreceiver_account: ",
-    receiver,
-    "\namount: ",
-    amount,
-    "\nnote: ",
-    note,
-    "\npin: ",
-    pin)
 
     if not pin:
         return jsonify({"error": "Pin is required"}), 400
@@ -50,7 +39,7 @@ def create_transaction():
         return jsonify({"error": "Sender wallet not found"}), 404
 
     encrypted_pem = base64.b64decode(wallet_data['encrypted_private_pin_key'])
-    salt_pin = base64.b64decode(wallet_data['salt'])
+    salt_pin = base64.b64decode(wallet_data['salt_pin'])
     private_pin_key = decrypt_private_key(encrypted_pem, pin, salt_pin)
 
     sender_balance = wallet_data.get('balance', 0)
@@ -75,7 +64,11 @@ def create_transaction():
     return jsonify({"message": "Transaction created, balances updated.", "txn_id": tx.txn_id, "time": tx.timestamp}), 201
 
 
-@blockchain_bp.route("/credit", methods=["POST"])
+@blockchain_bp.route("/credit", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def credit_account():
     data = request.get_json()
     account_number = data.get("account_number")
@@ -108,7 +101,11 @@ def credit_account():
     return jsonify({"message": "Amount credited successfully", "transaction_hash": tx.tx_hash}), 201
 
 
-@blockchain_bp.route("/debit", methods=["POST"])
+@blockchain_bp.route("/debit", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def debit_account():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)
@@ -147,7 +144,11 @@ def debit_account():
     return jsonify({"message": "Amount debited successfully", "transaction_hash": tx.tx_hash}), 201
 
 
-@blockchain_bp.route("/balance", methods=["GET"])
+@blockchain_bp.route("/balance", methods=["GET", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def view_balance():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)
@@ -161,7 +162,11 @@ def view_balance():
     return jsonify({"balance": wallet_data.get("balance", 0)}), 200
 
 
-@blockchain_bp.route("/history", methods=["GET"])
+@blockchain_bp.route("/history", methods=["GET", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def get_transaction_history():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)

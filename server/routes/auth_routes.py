@@ -16,8 +16,11 @@ auth_bp = Blueprint('auth', __name__)
 
 import re
 
-@auth_bp.route("/signup", methods=["POST"])
-@cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
+@auth_bp.route("/signup", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def signup():
     data = request.get_json()
     firstname = data.get("firstName")
@@ -49,7 +52,11 @@ def signup():
         "token": token
     }), 201
 
-@auth_bp.route("/login", methods=["POST","OPTIONS"])
+@auth_bp.route("/login", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def login():
     data = request.get_json()
     email = data.get("email")
@@ -71,21 +78,13 @@ def login():
         return jsonify({"error": "Invalid password."}), 401
 
     token = generate_token(account_number)
-    
-    response = jsonify({
-        "token": token,
-        "hasSetPin": wallet_data['has_set_pin']
-    })
+    return jsonify({"token": token, "hasSetPin": wallet_data['has_set_pin']}), 200
 
-    response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
-    response.headers.add("Access-Control-Allow-Credentials", "true")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-
-    return response
-
-@auth_bp.route("/validate-token", methods=["GET"])
-@cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
+@auth_bp.route("/validate-token", methods=["GET", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def validate_token():
     auth_header = request.headers.get("Authorization")
     if not auth_header:
@@ -101,8 +100,11 @@ def validate_token():
     except jwt.InvalidTokenError:
         return jsonify({"message": "Invalid token"}), 403
 
-@auth_bp.route("/set-pin", methods=["POST"])
-@cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
+@auth_bp.route("/set-pin", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def set_pin():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)
@@ -159,8 +161,11 @@ def set_pin():
         "account_number": wallet["account_number"]
     }), 200
 
-@auth_bp.route("/verify-pin", methods=["POST"])
-@cross_origin(origins=["http://localhost:3000", "https://depayment.vercel.app"], supports_credentials=True)
+@auth_bp.route("/verify-pin", methods=["POST", "OPTIONS"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def verify_wallet_pin():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)
