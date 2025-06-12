@@ -128,14 +128,16 @@ def set_pin():
 
     encrypted_private_pin_key, salt_pin = serialize_private_key(private_pin_key, pin)
 
-    wallets_collection.insert_one({
+    wallets_collection.update_one(
+        {"_id": wallet["_id"]},
+        {"$set": {
         "encrypted_private_pin_key": base64.b64encode(encrypted_private_pin_key).decode(),
         "salt_pin": base64.b64encode(salt_pin).decode(),
         "public_pin_key": public_pin_key.public_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         ).decode().strip().replace('-----BEGIN PUBLIC KEY-----\n', '').replace('\n-----END PUBLIC KEY-----', '')
-    })
+    }})
 
     return jsonify({
         "message": "PIN successfully set",
