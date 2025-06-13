@@ -1,10 +1,15 @@
 #routes/accounts_routes.py
 from flask import Blueprint, request, jsonify
 from models.wallet import Wallet
+from flask_cors import cross_origin
 
 accounts_bp = Blueprint('accounts', __name__)
 
 @accounts_bp.route("/verify", methods=["GET"])
+@cross_origin(
+    origins=["http://localhost:3000", "https://depayment.vercel.app"],
+    supports_credentials=True
+)
 def verify_account():
     account_number = request.args.get("accountNumber")
 
