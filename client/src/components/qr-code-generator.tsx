@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useRef } from "react"
-import { QRCodeSVG } from "qrcode.react"
+import { useRef } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 interface QRCodeGeneratorProps {
-  value: string
-  size?: number
-  level?: "L" | "M" | "Q" | "H"
-  includeMargin?: boolean
-  bgColor?: string
-  fgColor?: string
+  value: string;
+  size?: number;
+  level?: "L" | "M" | "Q" | "H";
+  includeMargin?: boolean;
+  bgColor?: string;
+  fgColor?: string;
 }
 
 export default function QRCodeGenerator({
@@ -20,7 +20,7 @@ export default function QRCodeGenerator({
   bgColor = "#ffffff",
   fgColor = "#000000",
 }: QRCodeGeneratorProps) {
-  const qrRef = useRef<HTMLDivElement>(null)
+  const qrRef = useRef<HTMLDivElement>(null);
 
   return (
     <div ref={qrRef} className="flex items-center justify-center">
@@ -33,5 +33,5 @@ export default function QRCodeGenerator({
         fgColor={fgColor}
       />
     </div>
-  )
+  );
 }

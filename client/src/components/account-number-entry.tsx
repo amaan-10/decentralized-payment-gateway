@@ -6,6 +6,7 @@ import { ArrowRight, CreditCard, DollarSign, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BASE_URL } from "@/lib/url";
 
 interface AccountNumberEntryProps {
   onSubmit: (accountNumber: string, amount: string, note: string) => void;
@@ -30,8 +31,6 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
     }
   }, [note]);
 
-  const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
-
   const verifyAccount = async () => {
     setErrors({ ...errors, accountNumber: "" });
 
@@ -48,8 +47,7 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/accounts/verify?accountNumber=${accountNumber}`
-        // `${API_URL}/api/accounts/verify?accountNumber=${accountNumber}`
+        `${BASE_URL}/api/accounts/verify?accountNumber=${accountNumber}`
       );
       const data = await res.json();
 

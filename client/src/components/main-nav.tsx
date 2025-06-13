@@ -28,6 +28,7 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import Cookies from "js-cookie";
+import { BASE_URL } from "@/lib/url";
 
 export function MainNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,7 +37,6 @@ export function MainNav() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const API_URL = process.env.NEXT_PUBLIC_DEPAY_API_URL;
 
   // Validate token from cookies
   useEffect(() => {
@@ -48,7 +48,7 @@ export function MainNav() {
       return;
     }
 
-    fetch(`${API_URL}/api/auth/validate-token`, {
+    fetch(`${BASE_URL}/api/auth/validate-token`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

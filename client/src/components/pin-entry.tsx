@@ -8,6 +8,7 @@ import { Lock, CreditCard, IndianRupee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Cookies from "js-cookie";
+import { BASE_URL } from "@/lib/url";
 
 interface PinEntryProps {
   accountNumber: string;
@@ -64,7 +65,7 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/verify-pin", {
+      const res = await fetch(`${BASE_URL}/api/auth/verify-pin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

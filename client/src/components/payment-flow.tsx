@@ -10,6 +10,7 @@ import { PinEntry } from "./pin-entry";
 import { ProcessingPayment } from "./processing-payment";
 import { PaymentResult } from "./payment-result";
 import Cookies from "js-cookie";
+import { BASE_URL } from "@/lib/url";
 
 type PaymentMethod = "account" | "qrcode" | null;
 type PaymentStatus = "idle" | "processing" | "success" | "failed";
@@ -56,28 +57,26 @@ export function PaymentFlow() {
     setPaymentStatus("processing");
 
     try {
-      const res = await fetch(
-        "http://localhost:5000/api/blockchain/transaction",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${Cookies.get("authToken")}`,
-          },
-          body: JSON.stringify({
-            receiver_account: accountNumber,
-            amount: Number(amount),
-            note: note,
-            pin: enteredPin.toString(),
-          }),
-        }
-      );
+      const res = await fetch(`${BASE_URL}/api/blockchain/transaction`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          credentials: "include",
+          Authorization: `Bearer ${Cookies.get("authToken")}`,
+        },
+        body: JSON.stringify({
+          receiver_account: accountNumber,
+          amount: Number(amount),
+          note: note,
+          pin: enteredPin.toString(),
+        }),
+      });
 
       const data = await res.json();
       console.log("Transaction response:", data);
       setTxnID(data.txn_id);
       setTxnTime(data.time);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (res.ok) {
         setPaymentStatus("success");
