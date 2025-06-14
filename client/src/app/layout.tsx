@@ -4,11 +4,18 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { MainNav } from "@/components/main-nav";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
-import { Sora, Space_Grotesk } from "next/font/google";
+import { Roboto, Sora, Space_Grotesk } from "next/font/google";
 
 const sora = Sora({
   subsets: ["latin"],
   variable: "--font-sora",
+  display: "swap",
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400", "700"], // Add weights as needed
   display: "swap",
 });
 
@@ -54,7 +61,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sora.variable} ${spaceGrotesk.variable} dark`}
+      className={`${sora.variable} ${roboto.variable} ${spaceGrotesk.variable} dark`}
       suppressHydrationWarning
     >
       <head>
