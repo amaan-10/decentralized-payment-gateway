@@ -77,7 +77,6 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
       });
 
       const data = await res.json();
-      console.log(Cookies.get("authToken"));
 
       if (!res.ok) {
         setError(data.message || "PIN verification failed");

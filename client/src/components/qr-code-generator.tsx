@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import Logo from "@/assets/logo";
 
 interface QRCodeGeneratorProps {
   value: string;
@@ -23,7 +24,11 @@ export default function QRCodeGenerator({
   const qrRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={qrRef} className="flex items-center justify-center">
+    <div
+      ref={qrRef}
+      className="relative flex items-center justify-center"
+      style={{ width: size, height: size }}
+    >
       <QRCodeSVG
         value={value}
         size={size}
@@ -32,6 +37,16 @@ export default function QRCodeGenerator({
         bgColor={bgColor}
         fgColor={fgColor}
       />
+      <div
+        className="absolute flex items-center justify-center rounded-full bg-black shadow-xl"
+        style={{
+          width: size * 0.25,
+          height: size * 0.25,
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4)",
+        }}
+      >
+        <Logo className="w-7 h-7 text-white" />
+      </div>
     </div>
   );
 }

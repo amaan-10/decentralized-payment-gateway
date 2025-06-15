@@ -73,7 +73,6 @@ export function PaymentFlow() {
       });
 
       const data = await res.json();
-      console.log("Transaction response:", data);
       setTxnID(data.txn_id);
       setTxnTime(data.time);
       await new Promise((resolve) => setTimeout(resolve, 2000));
