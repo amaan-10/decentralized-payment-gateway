@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { ArrowDown, ArrowUp, Copy, User } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { ArrowDown, ArrowUp, Copy, Send, IndianRupee } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -64,10 +64,10 @@ export default function TransferPage() {
   const [paymentLink, setPaymentLink] = useState(
     "https://paywallet.com/pay/alex123"
   );
+  const router = useRouter();
 
   const handleSend = () => {
     // Handle send money logic
-    console.log("Sending", { amount, selectedWallet, recipient, note });
     alert("Payment sent successfully!");
     setAmount("");
     setNote("");
@@ -76,6 +76,10 @@ export default function TransferPage() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(paymentLink);
     alert("Payment link copied to clipboard!");
+  };
+
+  const handleSendMoneyClick = () => {
+    router.push("/pay");
   };
 
   return (
@@ -106,104 +110,94 @@ export default function TransferPage() {
               <CardDescription>Send money to anyone, anywhere</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="amount">Amount</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <span className="text-muted-foreground">$</span>
+              <div className="space-y-8">
+                {/* Dark Mode Minimalist Send Money Logo */}
+                <div className="flex justify-center">
+                  <div
+                    onClick={handleSendMoneyClick}
+                    className="group cursor-pointer relative"
+                  >
+                    {/* Outer glow effect - enhanced for dark mode */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-700/30 to-slate-600/30 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 scale-110"></div>
+
+                    {/* Main container - dark mode styling */}
+                    <div className="relative bg-slate-900/80 backdrop-blur-sm border border-slate-700/60 rounded-3xl p-12 shadow-2xl hover:shadow-slate-900/50 transition-all duration-500 group-hover:border-slate-600/80 group-hover:bg-slate-900/90">
+                      {/* Floating elements - adjusted for dark mode */}
+                      <div className="absolute top-4 right-4 w-2 h-2 bg-slate-600 rounded-full opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-6 left-6 w-1 h-1 bg-slate-500 rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+
+                      {/* Icon container */}
+                      <div className="flex flex-col items-center space-y-6">
+                        <div className="relative">
+                          {/* Icon background - dark mode gradient */}
+                          <div className="w-16 h-16 bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl flex items-center justify-center group-hover:from-slate-700 group-hover:to-slate-600 transition-all duration-300 shadow-lg">
+                            <Send className="w-7 h-7 text-slate-300 group-hover:text-slate-100 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+                          </div>
+
+                          {/* Subtle pulse ring - enhanced for dark mode */}
+                          <div className="absolute inset-0 rounded-2xl border border-slate-600/50 opacity-0 group-hover:opacity-100 animate-ping"></div>
+                        </div>
+
+                        {/* Text */}
+                        <div className="text-center space-y-2">
+                          <h3 className="text-xl font-medium text-slate-100 tracking-tight">
+                            Send Money
+                          </h3>
+                          <p className="text-sm text-slate-400 font-light">
+                            Tap to transfer
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Bottom accent line - glowing effect for dark mode */}
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-slate-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-sm shadow-slate-500/50"></div>
+                    </div>
                   </div>
-                  <Input
-                    id="amount"
-                    type="number"
-                    placeholder="0.00"
-                    className="pl-8"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="wallet">From Wallet</Label>
-                <Select
-                  value={selectedWallet}
-                  onValueChange={setSelectedWallet}
-                >
-                  <SelectTrigger id="wallet">
-                    <SelectValue placeholder="Select wallet" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {wallets.map((wallet) => (
-                      <SelectItem key={wallet.id} value={wallet.id.toString()}>
-                        {wallet.name} (${wallet.balance.toFixed(2)})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="recipient">Recipient</Label>
-                <Select value={recipient} onValueChange={setRecipient}>
-                  <SelectTrigger id="recipient">
-                    <SelectValue placeholder="Select recipient" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {contacts.map((contact) => (
-                      <SelectItem
-                        key={contact.id}
-                        value={contact.id.toString()}
-                      >
-                        {contact.name} ({contact.email})
-                      </SelectItem>
-                    ))}
-                    <SelectItem value="new">Add New Recipient</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="note">Note (Optional)</Label>
-                <Input
-                  id="note"
-                  placeholder="What's this for?"
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                />
-              </div>
             </CardContent>
-            <CardFooter>
-              <Button onClick={handleSend} className="w-full">
-                Send Money
-              </Button>
-            </CardFooter>
           </Card>
 
           <div className="mt-6">
             <h2 className="text-lg font-semibold mb-4">Recent Recipients</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {contacts.map((contact) => (
-                <Button
+
+            <div className="grid grid-cols-4 gap-3">
+              {contacts.map((contact, index) => (
+                <button
                   key={contact.id}
-                  variant="outline"
-                  className="flex flex-col items-center justify-center h-24 gap-2"
-                  onClick={() => setRecipient(contact.id.toString())}
+                  onClick={handleSendMoneyClick}
+                  className="group flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-slate-800/50 transition-all duration-300"
                 >
-                  <div className="rounded-full bg-muted p-2">
-                    <User className="h-5 w-5" />
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl flex items-center justify-center group-hover:from-slate-700 group-hover:to-slate-600 transition-all duration-300 shadow-lg">
+                      <span className="text-sm font-medium text-slate-300 group-hover:text-slate-100">
+                        {contact.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-sm">{contact.name}</span>
-                </Button>
+                  <span className="text-xs text-slate-400 group-hover:text-slate-300 font-medium tracking-wide transition-colors duration-300">
+                    {contact.name.split(" ")[0]}
+                  </span>
+                </button>
               ))}
-              <Button
-                variant="outline"
-                className="flex flex-col items-center justify-center h-24 gap-2"
+
+              <button
+                onClick={handleSendMoneyClick}
+                className="group flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-slate-800/50 transition-all duration-300"
               >
-                <div className="rounded-full bg-muted p-2">
-                  <User className="h-5 w-5" />
+                <div className="w-12 h-12 border-2 border-dashed border-slate-600 rounded-xl flex items-center justify-center group-hover:border-slate-500 transition-colors duration-300">
+                  <div className="w-4 h-4 border border-slate-500 rounded-full flex items-center justify-center group-hover:border-slate-400 transition-colors duration-300">
+                    <div className="w-2 h-px bg-slate-500 group-hover:bg-slate-400 transition-colors duration-300"></div>
+                    <div className="w-px h-2 bg-slate-500 group-hover:bg-slate-400 absolute transition-colors duration-300"></div>
+                  </div>
                 </div>
-                <span className="text-sm">Add New</span>
-              </Button>
+                <span className="text-xs text-slate-500 group-hover:text-slate-400 font-medium tracking-wide transition-colors duration-300">
+                  Add
+                </span>
+              </button>
             </div>
           </div>
         </TabsContent>
@@ -250,7 +244,9 @@ export default function TransferPage() {
                   </Label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <span className="text-muted-foreground">$</span>
+                      <span className="text-muted-foreground font-roboto">
+                        ₹
+                      </span>
                     </div>
                     <Input
                       id="receive-amount"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -25,62 +25,139 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BASE_URL } from "@/lib/url";
 
 // Mock data for the dashboard
 const wallets = [
-  { id: 1, name: "Main Wallet", balance: 4750.85, currency: "USD" },
-  { id: 2, name: "Savings", balance: 12350.42, currency: "USD" },
-  { id: 3, name: "Investments", balance: 8320.15, currency: "USD" },
+  { id: 1, name: "Main Wallet", balance: 0, currency: "USD" },
+  { id: 2, name: "Savings", balance: 0, currency: "USD" },
+  { id: 3, name: "Investments", balance: 0, currency: "USD" },
 ];
+interface Info {
+  account: string;
+  name: string;
+}
 
-const recentTransactions = [
-  {
-    id: 1,
-    description: "Coffee Shop",
-    amount: -4.5,
-    type: "expense",
-    date: "Today, 9:15 AM",
-  },
-  {
-    id: 2,
-    description: "Salary Deposit",
-    amount: 2850.0,
-    type: "income",
-    date: "Yesterday, 5:30 PM",
-  },
-  {
-    id: 3,
-    description: "Grocery Store",
-    amount: -65.38,
-    type: "expense",
-    date: "Yesterday, 2:45 PM",
-  },
-  {
-    id: 4,
-    description: "Freelance Payment",
-    amount: 350.0,
-    type: "income",
-    date: "May 20, 2023",
-  },
-  {
-    id: 5,
-    description: "Electric Bill",
-    amount: -85.2,
-    type: "expense",
-    date: "May 19, 2023",
-  },
-];
+type recentTransactions = {
+  _id: number;
+  note: string;
+  amount: number;
+  type: "received" | "send";
+  timestamp: string;
+  receiver: Info;
+  sender: Info;
+};
 
 export default function DashboardPage() {
-  const [showBalance, setShowBalance] = useState(true);
-  const totalBalance = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);
+  const [showBalance, setShowBalance] = useState(false);
+  const [name, setName] = useState("");
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [fullName, setFullName] = useState("");
+  const [errors, setErrors] = useState({ accountNumber: "" });
+  const [recentTransactions, setRecentTransactions] = useState<
+    recentTransactions[]
+  >([]);
+
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/accounts/details`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await res.json();
+
+        setName(data.first_name + " " + data.last_name);
+        setTotalBalance(data.balance);
+        setFullName(data.full_name);
+      } catch (err) {
+        setErrors((prev) => ({
+          ...prev,
+          accountNumber: "Error verifying account",
+        }));
+      }
+    };
+
+    const fetchTransactions = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/accounts/transactions`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          credentials: "include",
+        });
+        const data = await res.json();
+
+        console.log("Transactions:", data);
+        const splitTransactions = data.transactions.slice(0, 4);
+        setRecentTransactions(splitTransactions || []);
+      } catch (err) {
+        console.error("Error fetching transactions:", err);
+      }
+    };
+
+    fetchTransactions();
+
+    fetchAccountDetails();
+  }, []);
+
+  function formatTimestamp(gmtString: string): string {
+    const gmtDate = new Date(gmtString); // Parsed in UTC
+
+    // Now format directly in IST using 'en-IN' locale
+    const istDateStr = gmtDate.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+    const istDate = new Date(
+      gmtDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
+    const now = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const inputDay = new Date(
+      istDate.getFullYear(),
+      istDate.getMonth(),
+      istDate.getDate()
+    );
+
+    const timeStr = istDate.toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    if (inputDay.getTime() === today.getTime()) {
+      return `Today, ${timeStr}`;
+    }
+
+    if (inputDay.getTime() === yesterday.getTime()) {
+      return `Yesterday, ${timeStr}`;
+    }
+
+    return istDateStr; // Already localized
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, Alex!</p>
+          <p className="text-muted-foreground">Welcome, {name}!</p>
         </div>
         <div className="flex gap-2">
           <Button asChild>
@@ -115,7 +192,23 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {showBalance ? `$${totalBalance.toFixed(2)}` : "••••••"}
+            {showBalance ? (
+              <>
+                <span className="font-roboto">₹</span>
+                <span>
+                  {Math.abs(totalBalance) % 1 === 0
+                    ? Math.abs(totalBalance).toLocaleString("en-IN", {
+                        maximumFractionDigits: 0,
+                      })
+                    : Math.abs(totalBalance).toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                </span>
+              </>
+            ) : (
+              "••••••"
+            )}
           </div>
           <p className="text-xs text-muted-foreground">+5.1% from last month</p>
         </CardContent>
@@ -132,7 +225,23 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {showBalance ? `$${wallet.balance.toFixed(2)}` : "••••••"}
+                {showBalance ? (
+                  <>
+                    <span className="font-roboto">₹</span>
+                    <span>
+                      {Math.abs(wallet.balance) % 1 === 0
+                        ? Math.abs(wallet.balance).toLocaleString("en-IN", {
+                            maximumFractionDigits: 0,
+                          })
+                        : Math.abs(wallet.balance).toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                    </span>
+                  </>
+                ) : (
+                  "••••••"
+                )}
               </div>
               <div className="mt-4 h-1">
                 <Progress value={45} className="h-2" />
@@ -199,18 +308,18 @@ export default function DashboardPage() {
           <CardContent className="space-y-4">
             {recentTransactions.slice(0, 4).map((transaction) => (
               <div
-                key={transaction.id}
+                key={transaction._id}
                 className="flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`rounded-full p-2 ${
-                      transaction.type === "income"
+                      transaction.type === "received"
                         ? "bg-green-100"
                         : "bg-red-100"
                     }`}
                   >
-                    {transaction.type === "income" ? (
+                    {transaction.type === "received" ? (
                       <ArrowDown className="h-4 w-4 text-green-600" />
                     ) : (
                       <ArrowUp className="h-4 w-4 text-red-600" />
@@ -218,22 +327,32 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium">
-                      {transaction.description}
-                    </p>
+                      {transaction.type === "received"
+                        ? transaction.sender.name
+                        : transaction.receiver.name}
+                    </p>{" "}
                     <p className="text-xs text-muted-foreground">
-                      {transaction.date}
+                      {formatTimestamp(transaction.timestamp)}
                     </p>
                   </div>
                 </div>
                 <div
                   className={`text-sm font-medium ${
-                    transaction.type === "income"
+                    transaction.type === "received"
                       ? "text-green-600"
                       : "text-red-600"
                   }`}
                 >
-                  {transaction.type === "income" ? "+" : "-"}$
-                  {Math.abs(transaction.amount).toFixed(2)}
+                  {transaction.type === "received" ? "+" : "-"}
+                  <span className="font-roboto">₹</span>
+                  {Math.abs(transaction.amount) % 1 === 0
+                    ? Math.abs(transaction.amount).toLocaleString("en-IN", {
+                        maximumFractionDigits: 0,
+                      })
+                    : Math.abs(transaction.amount).toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                 </div>
               </div>
             ))}

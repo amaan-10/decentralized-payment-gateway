@@ -52,13 +52,11 @@ export default function ScanQRPage() {
         },
         (decodedText) => {
           // Success callback
-          console.log(`QR Code detected: ${decodedText}`);
           setScanResult(decodedText);
           stopScanner();
         },
         (errorMessage) => {
           // Error callback
-          console.log(errorMessage);
         }
       );
     } catch (err) {
@@ -71,7 +69,6 @@ export default function ScanQRPage() {
     if (scannerRef.current && scannerRef.current.isScanning) {
       try {
         await scannerRef.current.stop();
-        console.log("Scanner stopped");
       } catch (err) {
         console.error("Error stopping scanner:", err);
       }
