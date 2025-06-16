@@ -21,9 +21,16 @@ def create_transaction():
     token = request.headers.get("Authorization").split(" ")[1]
     decoded = decode_token(token)
 
+    sender_data = Wallet.find_by_account_number(decoded["account_number"])
+    receiver_data = Wallet.find_by_account_number(request.json.get("receiver_account"))
+    if not sender_data or not receiver_data:
+        return jsonify({"error": "Invalid sender or receiver account"}), 404
+
     data = request.get_json()
-    sender = decoded["account_number"]
-    receiver = data.get("receiver_account")
+    sender_account = decoded["account_number"]
+    sender_name = f"{sender_data.get('first_name', 'Unknown')} {sender_data.get('last_name', '')}".strip()
+    receiver_name = f"{receiver_data.get('first_name', 'Unknown')} {receiver_data.get('last_name', '')}".strip()
+    receiver_account = data.get("receiver_account")
     amount = data.get("amount")
     note = data.get("note")
     pin = data.get("pin")
@@ -31,10 +38,10 @@ def create_transaction():
     if not pin:
         return jsonify({"error": "Pin is required"}), 400
 
-    if not all([receiver, amount]):
+    if not all([receiver_account, amount]):
         return jsonify({"error": "Missing receiver or amount"}), 400
 
-    wallet_data = Wallet.find_by_account_number(sender)
+    wallet_data = Wallet.find_by_account_number(sender_account)
     if not wallet_data:
         return jsonify({"error": "Sender wallet not found"}), 404
 
@@ -47,19 +54,18 @@ def create_transaction():
     if sender_balance < amount:
         return jsonify({"error": "Insufficient balance"}), 400
 
-    receiver_wallet_data = Wallet.find_by_account_number(receiver)
+    receiver_wallet_data = Wallet.find_by_account_number(receiver_account)
     if not receiver_wallet_data:
         return jsonify({"error": "Receiver wallet not found"}), 404    
 
-    tx = Transaction(sender, receiver, amount, note, private_pin_key)
+    tx = Transaction(sender_account, receiver_account, sender_name, receiver_name, amount, note, private_pin_key)
     tx.save_to_db()
-    print("Transaction created:", tx.txn_id)
 
-    Wallet.update_balance(sender, -amount)
-    Wallet.update_balance(receiver, amount)
+    Wallet.update_balance(sender_account, -amount)
+    Wallet.update_balance(receiver_account, amount)
 
     bank_chain.add_transaction(tx)
-    bank_chain.mine_pending_transactions(sender)
+    bank_chain.mine_pending_transactions(sender_account)
 
     return jsonify({"message": "Transaction created, balances updated.", "txn_id": tx.txn_id, "time": tx.timestamp}), 201
 

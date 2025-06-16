@@ -113,9 +113,6 @@ def set_pin():
     account_number = decoded["account_number"]
     pin = data.get("pin")
 
-    print(f"Setting PIN for account number: {account_number}")
-    print(f"Received PIN: {pin}")
-
     # Input validation
     if not account_number or not pin:
         return jsonify({"error": "Account Number, and 4-digit PIN are required"}), 400
