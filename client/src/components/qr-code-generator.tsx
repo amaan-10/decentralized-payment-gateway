@@ -16,7 +16,7 @@ interface QRCodeGeneratorProps {
 export default function QRCodeGenerator({
   value,
   size = 192,
-  level = "L",
+  level = "Q",
   includeMargin = true,
   bgColor = "#ffffff",
   fgColor = "#000000",
