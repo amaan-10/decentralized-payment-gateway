@@ -8,13 +8,19 @@ import string
 import pytz
 
 class Transaction:
-    def __init__(self, sender_account, receiver_account, amount, note, private_pin_key):
+    def __init__(self, sender_account, receiver_account, sender_name, receiver_name, amount, note, private_pin_key):
         txn_id = "TXN" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8)).upper()
         ist = pytz.timezone('Asia/Kolkata')
 
         self.txn_id = txn_id
-        self.sender_account = sender_account
-        self.receiver_account = receiver_account
+        self.sender = {
+            "account": sender_account,
+            "name": sender_name
+        }
+        self.receiver = {
+            "account": receiver_account,
+            "name": receiver_name
+        }
         self.amount = amount
         self.note = note
         self.timestamp = datetime.now(ist)
@@ -28,7 +34,7 @@ class Transaction:
 
 
     def calculate_hash(self):
-        content = f"{self.txn_id}{self.sender_account}{self.receiver_account}{self.amount}{self.timestamp}{self.note}"
+        content = f"{self.txn_id}{self.sender['account']}{self.receiver['account']}{self.amount}{self.timestamp}{self.note}"
         return hashlib.sha256(content.encode()).hexdigest()
 
 
@@ -39,8 +45,8 @@ class Transaction:
         # Save the transaction details to MongoDB
         transaction_data = {
             "txn_id": self.txn_id,
-            "sender_account": self.sender_account,
-            "receiver_account": self.receiver_account,
+            "sender": self.sender,
+            "receiver": self.receiver,
             "amount": self.amount,
             "note": self.note,
             "timestamp": self.timestamp,
@@ -48,3 +54,45 @@ class Transaction:
             "signature": self.signature
         }
         transactions_collection.insert_one(transaction_data)
+
+    @staticmethod
+    def find_by_account_number(account_number):
+        transactions = transactions_collection.find({
+            "$or": [
+                {"sender.account": account_number},
+                {"receiver.account": account_number}
+            ]
+        })
+
+        allowed_keys = {
+            "amount",
+            "note",
+            "receiver",
+            "sender",
+            "timestamp",
+            "_id"
+        }
+
+        serialized_transactions = []
+        for txn in transactions:
+            txn["_id"] = str(txn["_id"])
+
+            clean_txn = {}
+            for key in allowed_keys:
+                if key in txn:
+                    value = txn[key]
+                    if isinstance(value, bytes):
+                        try:
+                            value = value.decode("utf-8")
+                        except Exception:
+                            value = str(value)
+                    clean_txn[key] = value
+
+            if "sender" in txn and isinstance(txn["sender"], dict) and txn["sender"].get("account") == account_number:
+                clean_txn["type"] = "send"
+            elif "receiver" in txn and isinstance(txn["receiver"], dict) and txn["receiver"].get("account") == account_number:
+                clean_txn["type"] = "received"
+
+            serialized_transactions.append(clean_txn)
+
+        return serialized_transactions

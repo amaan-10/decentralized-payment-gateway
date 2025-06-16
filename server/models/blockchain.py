@@ -1,4 +1,3 @@
-#models/blockchain.py
 from datetime import datetime
 import hashlib
 from db import blocks_collection
@@ -37,7 +36,15 @@ class Blockchain:
         self.pending_transactions = []
 
     def create_genesis_block(self):
-        genesis_tx = Transaction("system", "genesis", 0, "Genesis Block", None)
+        genesis_tx = Transaction(
+            sender_account="system",
+            receiver_account="genesis",
+            sender_name="System",
+            receiver_name="Genesis",
+            amount=0,
+            note="Genesis Block",
+            private_pin_key=None
+        )
         block = Block([genesis_tx], "0")
         block.mine_block(self.difficulty)
         block.save_to_db()
