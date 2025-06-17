@@ -155,14 +155,7 @@ export function PaymentResult({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-400">Account</span>
-                <span className="text-white font-medium">
-                  {accountNumber.replace(
-                    /^(\d{2})(\d+)(\d{2})$/,
-                    (_, start, middle, end) => {
-                      return `${start}${"*".repeat(middle.length)}${end}`;
-                    }
-                  )}
-                </span>
+                <span className="text-white font-medium">{accountNumber}</span>
               </div>
             </div>
           </CardContent>

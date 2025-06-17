@@ -19,7 +19,7 @@ import { Card } from "@/components/ui/card";
 import { BASE_URL } from "@/lib/url";
 
 interface QrCodeScannerProps {
-  onScan: (data: string, note: string) => void;
+  onScan: (acc: string, fullName: string, amt: string, note: string) => void;
 }
 
 export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
@@ -121,7 +121,12 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
     setErrors({});
     setLoading(true);
 
-    const [accountNumber, parsedAmount] = text.split("|");
+    const url = new URL(text);
+    const accountNumber = url.searchParams.get("acc") ?? "";
+    const parsedAmount = url.searchParams.get("amt") ?? "";
+    const payNote = url.searchParams.get("note") ?? "";
+
+    console.log(accountNumber, parsedAmount, payNote);
 
     if (!accountNumber) {
       setErrors({ accountNumber: "Invalid QR code format" });
@@ -158,8 +163,8 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
             setIsAccountFound(false);
             setUiLocked(false);
 
-            if (text.includes("|")) {
-              onScan(text, note);
+            if (text.includes("amt=")) {
+              onScan(accountNumber, data.full_name, parsedAmount, payNote);
             } else {
               setScannedAccount(text);
               setShowAmountPrompt(true);
@@ -179,7 +184,7 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
 
   const handleAmountSubmit = () => {
     if (scannedAccount && amount) {
-      onScan(`${scannedAccount}|${amount}`, note);
+      onScan(scannedAccount, fullName, amount, note);
       setShowAmountPrompt(false);
       setScannedAccount(null);
       setAmount("");

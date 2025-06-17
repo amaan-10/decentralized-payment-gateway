@@ -4,7 +4,7 @@ import type React from "react";
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Lock, CreditCard, IndianRupee } from "lucide-react";
+import { Lock, CreditCard, IndianRupee, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Cookies from "js-cookie";
@@ -13,10 +13,16 @@ import { BASE_URL } from "@/lib/url";
 interface PinEntryProps {
   accountNumber: string;
   amount: string;
+  name: string;
   onSubmit: (pin: string) => void;
 }
 
-export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
+export function PinEntry({
+  accountNumber,
+  name,
+  amount,
+  onSubmit,
+}: PinEntryProps) {
   const [pin, setPin] = useState(["", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -93,13 +99,7 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
     }
   };
 
-  // Mask account number for display
-  const maskedAccount = accountNumber.replace(
-    /^(\d{2})(\d+)(\d{2})$/,
-    (_, start, middle, end) => {
-      return `${start}${"*".repeat(middle.length)}${end}`;
-    }
-  );
+  console.log("name", name);
 
   return (
     <div>
@@ -108,21 +108,24 @@ export function PinEntry({ accountNumber, amount, onSubmit }: PinEntryProps) {
       <Card className="border-gray-700 bg-gray-800/50 mb-6">
         <CardContent className="p-4">
           <div className="space-y-3">
+            <div className="flex items-center justify-center">
+              <p className="mb-2 text-center flex gap-2 text-sm font-semibold">
+                <ShieldCheck className="h-4 w-4 text-green-700" />{" "}
+                {name.toUpperCase()}
+              </p>
+            </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-400">Account</span>
+              <span className="text-gray-400">Account Number</span>
               <span className="text-white font-medium flex items-center">
                 <CreditCard className="h-4 w-4 mr-2 text-gray-500" />
-                {maskedAccount}
+                {accountNumber}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-400">Amount</span>
               <span className="text-white font-medium flex items-center">
-                <IndianRupee className="h-4 w-4 mr-2 text-gray-500" />
-                <span className="text-xs text-center text-gray-800 dark:text-gray-100">
-                  ₹
-                </span>
-                {Number(amount).toLocaleString("en-IN", {
+                <IndianRupee className="h-4 w-4 mr-[5px] mb-[2px] text-gray-500" />
+               {Number(amount).toLocaleString("en-IN", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}

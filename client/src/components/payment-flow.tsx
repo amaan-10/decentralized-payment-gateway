@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PaymentMethodSelection } from "./payment-method-selection";
 import { AccountNumberEntry } from "./account-number-entry";
@@ -11,6 +11,7 @@ import { ProcessingPayment } from "./processing-payment";
 import { PaymentResult } from "./payment-result";
 import Cookies from "js-cookie";
 import { BASE_URL } from "@/lib/url";
+import { useSearchParams } from "next/navigation";
 
 type PaymentMethod = "account" | "qrcode" | null;
 type PaymentStatus = "idle" | "processing" | "success" | "failed";
@@ -19,12 +20,28 @@ export function PaymentFlow() {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [accountNumber, setAccountNumber] = useState("");
+  const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [pin, setPin] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle");
   const [txnID, setTxnID] = useState<string | null>(null);
   const [txnTime, setTxnTime] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const acc = searchParams.get("acc");
+    const amt = searchParams.get("amt");
+    const note = searchParams.get("note");
+
+    if (acc && amt) {
+      setAccountNumber(acc);
+      setAmount(amt);
+      if (note) setNote(note);
+      setPaymentMethod("account");
+      setStep(3);
+    }
+  }, [searchParams]);
 
   const handlePaymentMethodSelect = (method: PaymentMethod) => {
     setPaymentMethod(method);
@@ -33,20 +50,27 @@ export function PaymentFlow() {
 
   const handleDetailsSubmit = (
     accNumber: string,
+    name: string,
     amt: string,
     note: string
   ) => {
     setAccountNumber(accNumber);
+    setName(name);
     setAmount(amt);
     setNote(note);
     setStep(3);
   };
 
-  const handleQrCodeScanned = (data: string, note: string) => {
-    // In a real app, parse the QR code data to extract account and amount
-    const [accNumber, amt] = data.split("|");
-    setAccountNumber(accNumber || "QR-1234567890");
-    setAmount(amt || "150.00");
+  const handleQrCodeScanned = (
+    acc: string,
+    name: string,
+    amt: string,
+    note: string
+  ) => {
+    setAccountNumber(acc);
+    setName(name);
+    console.log("Scanned account name:", name);
+    setAmount(amt);
     setNote(note);
     setStep(3);
   };
@@ -167,6 +191,7 @@ export function PaymentFlow() {
               <PinEntry
                 accountNumber={accountNumber}
                 amount={amount}
+                name={name}
                 onSubmit={handlePinSubmit}
               />
             </motion.div>

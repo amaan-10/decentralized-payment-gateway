@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { BASE_URL } from "@/lib/url";
 
 interface AccountNumberEntryProps {
-  onSubmit: (accountNumber: string, amount: string, note: string) => void;
+  onSubmit: (accountNumber: string, fullName: string, amount: string, note: string) => void;
 }
 
 export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
@@ -79,7 +79,7 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
     setErrors({ accountNumber: "", amount: amountError });
 
     if (!amountError) {
-      onSubmit(accountNumber, amount, note);
+      onSubmit(accountNumber, fullName, amount, note);
     }
   };
 
@@ -214,7 +214,7 @@ export function AccountNumberEntry({ onSubmit }: AccountNumberEntryProps) {
                       setAmountError("Amount cannot be less than ₹1");
                       return;
                     }
-                    onSubmit(accountNumber, amount, note);
+                    onSubmit(accountNumber, fullName, amount, note);
                   }}
                   className="bg-purple-600 hover:bg-purple-700 text-white py-4 px-3"
                 >
