@@ -39,6 +39,9 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
   const [isAccountFound, setIsAccountFound] = useState(false);
   const [isAccountNotFound, setIsAccountNotFound] = useState(false);
   const [uiLocked, setUiLocked] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<
+    boolean | null
+  >(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -51,8 +54,29 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
   const codeReaderRef = useRef<BrowserQRCodeReader | null>(null);
   const scannerControlsRef = useRef<IScannerControls | null>(null);
 
+  const checkCameraPermission = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach((track) => track.stop());
+      setHasCameraPermission(true);
+      return true;
+    } catch (err) {
+      setHasCameraPermission(false);
+      return false;
+    }
+  };
+
   const startScanner = async () => {
     setError(null);
+
+    const hasPermission = await checkCameraPermission();
+    if (!hasPermission) {
+      setError(
+        "Camera access is required to scan QR codes. Please enable camera permissions."
+      );
+      return;
+    }
+
     setIsScanning(true);
 
     try {
@@ -74,7 +98,7 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
         );
     } catch (err) {
       console.error(err);
-      setError("Camera access failed.");
+      setError("Camera access failed. Please check your permissions.");
       setIsScanning(false);
     }
   };
@@ -182,11 +206,6 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
       setError("QR scan from image failed.");
     }
   };
-
-  // const handleDemoQr = () => {
-  //   const mockQrData = "1234567890|150.00";
-  //   handleScan(mockQrData);
-  // };
 
   useEffect(() => {
     return () => {
@@ -397,6 +416,12 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
                   {error ? (
                     <div className="text-center mb-4">
                       <p className="text-red-400 mb-2">{error}</p>
+                      {hasCameraPermission === false && (
+                        <p className="text-sm text-gray-400 mb-3">
+                          Please check your browser settings to enable camera
+                          access.
+                        </p>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
