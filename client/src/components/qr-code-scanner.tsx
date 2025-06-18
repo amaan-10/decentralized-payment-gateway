@@ -126,8 +126,6 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
     const parsedAmount = url.searchParams.get("amt") ?? "";
     const payNote = url.searchParams.get("note") ?? "";
 
-    console.log(accountNumber, parsedAmount, payNote);
-
     if (!accountNumber) {
       setErrors({ accountNumber: "Invalid QR code format" });
       setLoading(false);
@@ -166,7 +164,7 @@ export function QrCodeScanner({ onScan }: QrCodeScannerProps) {
             if (text.includes("amt=")) {
               onScan(accountNumber, data.full_name, parsedAmount, payNote);
             } else {
-              setScannedAccount(text);
+              setScannedAccount(accountNumber);
               setShowAmountPrompt(true);
             }
           }, 1500);

@@ -16,7 +16,7 @@ const QRCodeGenerator = forwardRef<SVGSVGElement, QRCodeGeneratorProps>(
     {
       value,
       size = 192,
-      level = "H",
+      level,
       includeMargin = true,
       bgColor = "#ffffff",
       fgColor = "#000000",

@@ -69,7 +69,6 @@ export function PaymentFlow() {
   ) => {
     setAccountNumber(acc);
     setName(name);
-    console.log("Scanned account name:", name);
     setAmount(amt);
     setNote(note);
     setStep(3);

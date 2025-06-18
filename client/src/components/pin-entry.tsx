@@ -99,8 +99,6 @@ export function PinEntry({
     }
   };
 
-  console.log("name", name);
-
   return (
     <div>
       <h2 className="text-xl font-semibold text-white mb-6">Enter PIN</h2>
@@ -125,7 +123,7 @@ export function PinEntry({
               <span className="text-gray-400">Amount</span>
               <span className="text-white font-medium flex items-center">
                 <IndianRupee className="h-4 w-4 mr-[5px] mb-[2px] text-gray-500" />
-               {Number(amount).toLocaleString("en-IN", {
+                {Number(amount).toLocaleString("en-IN", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
