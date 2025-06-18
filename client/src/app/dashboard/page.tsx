@@ -26,6 +26,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BASE_URL } from "@/lib/url";
+import { useAccountData } from "@/hooks/useAccountData";
 
 // Mock data for the dashboard
 const wallets = [
@@ -50,64 +51,19 @@ type recentTransactions = {
 
 export default function DashboardPage() {
   const [showBalance, setShowBalance] = useState(false);
-  const [name, setName] = useState("");
-  const [totalBalance, setTotalBalance] = useState(0);
-  const [fullName, setFullName] = useState("");
-  const [errors, setErrors] = useState({ accountNumber: "" });
-  const [recentTransactions, setRecentTransactions] = useState<
-    recentTransactions[]
-  >([]);
 
-  useEffect(() => {
-    const fetchAccountDetails = async () => {
-      try {
-        const res = await fetch(`${BASE_URL}/api/accounts/details`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await res.json();
-
-        setName(data.first_name + " " + data.last_name);
-        setTotalBalance(data.balance);
-        setFullName(data.full_name);
-      } catch (err) {
-        setErrors((prev) => ({
-          ...prev,
-          accountNumber: "Error verifying account",
-        }));
-      }
+  const { name, fullName, totalBalance, recentTransactions, errors } =
+    useAccountData() as {
+      name: string;
+      fullName: string;
+      totalBalance: number;
+      recentTransactions: recentTransactions[];
+      errors: any;
     };
-
-    const fetchTransactions = async () => {
-      try {
-        const res = await fetch(`${BASE_URL}/api/accounts/transactions`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          credentials: "include",
-        });
-        const data = await res.json();
-
-        console.log("Transactions:", data);
-        const splitTransactions = data.transactions.slice(0, 4);
-        setRecentTransactions(splitTransactions || []);
-      } catch (err) {
-        console.error("Error fetching transactions:", err);
-      }
-    };
-
-    fetchTransactions();
-
-    fetchAccountDetails();
-  }, []);
 
   function formatTimestamp(gmtString: string): string {
-    const gmtDate = new Date(gmtString); // Parsed in UTC
+    const gmtDate = new Date(gmtString);
 
-    // Now format directly in IST using 'en-IN' locale
     const istDateStr = gmtDate.toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
       hour: "2-digit",
@@ -149,7 +105,7 @@ export default function DashboardPage() {
       return `Yesterday, ${timeStr}`;
     }
 
-    return istDateStr; // Already localized
+    return istDateStr;
   }
 
   return (

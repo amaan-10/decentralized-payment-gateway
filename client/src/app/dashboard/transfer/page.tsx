@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Copy, Send, IndianRupee } from "lucide-react";
 
@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QRCodeGenerator from "@/components/qr-code-generator";
+import { useAccountData } from "@/hooks/useAccountData";
+import { toPng } from "html-to-image";
 
 // Mock data for contacts and wallets
 const contacts = [
@@ -62,20 +64,56 @@ export default function TransferPage() {
   const [recipient, setRecipient] = useState("");
   const [note, setNote] = useState("");
   const [paymentLink, setPaymentLink] = useState(
-    "https://paywallet.com/pay/alex123"
+    "https://depayment.vercel.app/pay"
   );
+  const [level, setQRLevel] = useState<"L" | "M" | "Q" | "H">("Q");
   const router = useRouter();
+  const { name, fullName, accountNumber, errors } = useAccountData();
 
-  const handleSend = () => {
-    // Handle send money logic
-    alert("Payment sent successfully!");
-    setAmount("");
-    setNote("");
+  useEffect(() => {
+    if (accountNumber) {
+      let link = `https://depayment.vercel.app/pay?acc=${accountNumber}`;
+      setPaymentLink(link);
+    }
+  }, [accountNumber]);
+
+  const generateLink = () => {
+    if (!accountNumber) return;
+
+    let link = `https://depayment.vercel.app/pay?acc=${accountNumber}`;
+
+    if (amount) {
+      link += `&amt=${amount}`;
+      setQRLevel("H");
+    }
+    if (note) {
+      // encode to safely include spaces/special chars
+      link += `&note=${encodeURIComponent(note)}`;
+      setQRLevel("H");
+    }
+
+    setPaymentLink(link);
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(paymentLink);
     alert("Payment link copied to clipboard!");
+  };
+
+  const qrRef = useRef<HTMLDivElement>(null);
+
+  const downloadQRCode = async () => {
+    if (!qrRef.current) return;
+
+    try {
+      const dataUrl = await toPng(qrRef.current);
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "DePayment_QR.png";
+      link.click();
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+    }
   };
 
   const handleSendMoneyClick = () => {
@@ -211,11 +249,20 @@ export default function TransferPage() {
               </CardHeader>
               <CardContent className="flex flex-col items-center justify-center p-6">
                 <div className="mb-6 w-48 h-48">
-                  <QRCodeGenerator value={paymentLink} />
+                  <div ref={qrRef}>
+                    <QRCodeGenerator value={paymentLink} level={level} />
+                  </div>
                 </div>
                 <p className="text-sm text-center text-muted-foreground mb-4">
                   Scan this QR code to send money to your wallet
                 </p>
+                <Button
+                  variant="outline"
+                  onClick={downloadQRCode}
+                  className="mb-4"
+                >
+                  Download QR Code
+                </Button>
               </CardContent>
             </Card>
 
@@ -253,6 +300,9 @@ export default function TransferPage() {
                       type="number"
                       placeholder="0.00"
                       className="pl-8"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      min="0"
                     />
                   </div>
                 </div>
@@ -278,11 +328,19 @@ export default function TransferPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="receive-note">Note (Optional)</Label>
-                  <Input id="receive-note" placeholder="What's this for?" />
+                  <Input
+                    type="text"
+                    id="receive-note"
+                    placeholder="What's this for?"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">Generate Payment Link</Button>
+                <Button onClick={generateLink} className="w-full">
+                  Generate Payment Link
+                </Button>
               </CardFooter>
             </Card>
           </div>
