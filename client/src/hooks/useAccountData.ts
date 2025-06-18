@@ -7,9 +7,9 @@ export function useAccountData() {
   const [totalBalance, setTotalBalance] = useState(0);
   const [fullName, setFullName] = useState("");
   const [errors, setErrors] = useState({ accountNumber: "" });
-const [accountNumber, setAccountNumber] = useState("");
-const [email, setEmail] = useState("")
-const [recentTransactions, setRecentTransactions] = useState([]);
+  const [accountNumber, setAccountNumber] = useState("");
+  const [email, setEmail] = useState("")
+  const [recentTransactions, setRecentTransactions] = useState([]);
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
@@ -21,8 +21,6 @@ const [recentTransactions, setRecentTransactions] = useState([]);
           },
         });
         const data = await res.json();
-
-        console.log(data)
 
         setName(data.first_name + " " + data.last_name);
         setTotalBalance(data.balance);
@@ -47,8 +45,6 @@ const [recentTransactions, setRecentTransactions] = useState([]);
           credentials: "include",
         });
         const data = await res.json();
-
-        console.log("Transactions:", data);
         const splitTransactions = data.transactions.slice(0, 4);
         setRecentTransactions(splitTransactions || []);
       } catch (err) {
