@@ -1,14 +1,40 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ArrowDown, ArrowUp, Calendar, Download, Filter, Search } from "lucide-react"
+import { useState } from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Calendar,
+  Download,
+  Filter,
+  Search,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Mock transaction data
 const transactions = [
@@ -112,35 +138,43 @@ const transactions = [
     time: "04:15 PM",
     status: "completed",
   },
-]
+];
 
 export default function TransactionsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterType, setFilterType] = useState("all")
-  const [dateRange, setDateRange] = useState("all")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const [dateRange, setDateRange] = useState("all");
 
   // Filter transactions based on search term, type, and date range
   const filteredTransactions = transactions.filter((transaction) => {
-    const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesType = filterType === "all" || transaction.type === filterType
+    const matchesSearch = transaction.description
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesType = filterType === "all" || transaction.type === filterType;
     // Date filtering would be implemented here
 
-    return matchesSearch && matchesType
-  })
+    return matchesSearch && matchesType;
+  });
 
   // Calculate totals
-  const totalIncome = transactions.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0)
+  const totalIncome = transactions
+    .filter((t) => t.type === "income")
+    .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalExpenses = transactions.filter((t) => t.type === "expense").reduce((sum, t) => sum + Math.abs(t.amount), 0)
+  const totalExpenses = transactions
+    .filter((t) => t.type === "expense")
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-  const netBalance = totalIncome - totalExpenses
+  const netBalance = totalIncome - totalExpenses;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
-          <p className="text-muted-foreground">View and manage your transaction history</p>
+          <p className="text-muted-foreground">
+            View and manage your transaction history
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -156,15 +190,37 @@ export default function TransactionsPage() {
             <CardTitle className="text-sm font-medium">Total Income</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">${totalIncome.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-green-600">
+              <span className="font-roboto">₹</span>
+              {Math.abs(totalIncome) % 1 === 0
+                ? Math.abs(totalIncome).toLocaleString("en-IN", {
+                    maximumFractionDigits: 0,
+                  })
+                : Math.abs(totalIncome).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+            </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Expenses
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">${totalExpenses.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-red-600">
+              <span className="font-roboto">₹</span>
+              {Math.abs(totalExpenses) % 1 === 0
+                ? Math.abs(totalExpenses).toLocaleString("en-IN", {
+                    maximumFractionDigits: 0,
+                  })
+                : Math.abs(totalExpenses).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -172,8 +228,20 @@ export default function TransactionsPage() {
             <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${netBalance >= 0 ? "text-green-600" : "text-red-600"}`}>
-              ${netBalance.toFixed(2)}
+            <div
+              className={`text-2xl font-bold ${
+                netBalance >= 0 ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              <span className="font-roboto">₹</span>
+              {Math.abs(netBalance) % 1 === 0
+                ? Math.abs(netBalance).toLocaleString("en-IN", {
+                    maximumFractionDigits: 0,
+                  })
+                : Math.abs(netBalance).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
             </div>
           </CardContent>
         </Card>
@@ -249,7 +317,10 @@ export default function TransactionsPage() {
                     <TableBody>
                       {filteredTransactions.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={4} className="text-center py-4 text-muted-foreground">
+                          <TableCell
+                            colSpan={4}
+                            className="text-center py-4 text-muted-foreground"
+                          >
                             No transactions found
                           </TableCell>
                         </TableRow>
@@ -259,7 +330,11 @@ export default function TransactionsPage() {
                             <TableCell className="font-medium">
                               <div className="flex items-center gap-2">
                                 <div
-                                  className={`rounded-full p-1.5 ${transaction.type === "income" ? "bg-green-100" : "bg-red-100"}`}
+                                  className={`rounded-full p-1.5 ${
+                                    transaction.type === "income"
+                                      ? "bg-green-100"
+                                      : "bg-red-100"
+                                  }`}
                                 >
                                   {transaction.type === "income" ? (
                                     <ArrowDown className="h-3 w-3 text-green-600" />
@@ -274,13 +349,34 @@ export default function TransactionsPage() {
                             <TableCell>
                               <div className="flex flex-col">
                                 <span>{transaction.date}</span>
-                                <span className="text-xs text-muted-foreground">{transaction.time}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {transaction.time}
+                                </span>
                               </div>
                             </TableCell>
                             <TableCell
-                              className={`text-right font-medium ${transaction.type === "income" ? "text-green-600" : "text-red-600"}`}
+                              className={`text-right font-medium ${
+                                transaction.type === "income"
+                                  ? "text-green-600"
+                                  : "text-red-600"
+                              }`}
                             >
-                              {transaction.type === "income" ? "+" : "-"}${Math.abs(transaction.amount).toFixed(2)}
+                              {transaction.type === "income" ? "+" : "-"}{" "}
+                              <span className="font-roboto">₹</span>
+                              {Math.abs(transaction.amount) % 1 === 0
+                                ? Math.abs(transaction.amount).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      maximumFractionDigits: 0,
+                                    }
+                                  )
+                                : Math.abs(transaction.amount).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                    }
+                                  )}
                             </TableCell>
                           </TableRow>
                         ))
@@ -319,11 +415,27 @@ export default function TransactionsPage() {
                             <TableCell>
                               <div className="flex flex-col">
                                 <span>{transaction.date}</span>
-                                <span className="text-xs text-muted-foreground">{transaction.time}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {transaction.time}
+                                </span>
                               </div>
                             </TableCell>
                             <TableCell className="text-right font-medium text-green-600">
-                              +${transaction.amount.toFixed(2)}
+                              + <span className="font-roboto">₹</span>
+                              {Math.abs(transaction.amount) % 1 === 0
+                                ? Math.abs(transaction.amount).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      maximumFractionDigits: 0,
+                                    }
+                                  )
+                                : Math.abs(transaction.amount).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                    }
+                                  )}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -361,11 +473,27 @@ export default function TransactionsPage() {
                             <TableCell>
                               <div className="flex flex-col">
                                 <span>{transaction.date}</span>
-                                <span className="text-xs text-muted-foreground">{transaction.time}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {transaction.time}
+                                </span>
                               </div>
                             </TableCell>
                             <TableCell className="text-right font-medium text-red-600">
-                              -${Math.abs(transaction.amount).toFixed(2)}
+                              - <span className="font-roboto">₹</span>
+                              {Math.abs(transaction.amount) % 1 === 0
+                                ? Math.abs(transaction.amount).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      maximumFractionDigits: 0,
+                                    }
+                                  )
+                                : Math.abs(transaction.amount).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                    }
+                                  )}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -376,7 +504,9 @@ export default function TransactionsPage() {
 
               <TabsContent value="pending" className="mt-4">
                 <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <p className="text-muted-foreground">No pending transactions</p>
+                  <p className="text-muted-foreground">
+                    No pending transactions
+                  </p>
                 </div>
               </TabsContent>
             </Tabs>
@@ -384,5 +514,5 @@ export default function TransactionsPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
