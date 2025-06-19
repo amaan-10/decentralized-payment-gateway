@@ -218,7 +218,7 @@ export default function DashboardPage() {
               className="flex h-24 flex-col items-center justify-center gap-1"
               asChild
             >
-              <Link href="/transfer">
+              <Link href="/dashboard/transfer">
                 <ArrowUp className="h-5 w-5" />
                 <span>Send</span>
               </Link>
@@ -228,7 +228,7 @@ export default function DashboardPage() {
               className="flex h-24 flex-col items-center justify-center gap-1"
               asChild
             >
-              <Link href="/transfer?type=receive">
+              <Link href="/dashboard/transfer?type=receive">
                 <ArrowDown className="h-5 w-5" />
                 <span>Receive</span>
               </Link>
@@ -238,7 +238,7 @@ export default function DashboardPage() {
               className="flex h-24 flex-col items-center justify-center gap-1"
               asChild
             >
-              <Link href="/cards">
+              <Link href="/dashboard/cards">
                 <CreditCard className="h-5 w-5" />
                 <span>Cards</span>
               </Link>
@@ -248,7 +248,7 @@ export default function DashboardPage() {
               className="flex h-24 flex-col items-center justify-center gap-1"
               asChild
             >
-              <Link href="/transactions">
+              <Link href="/dashboard/transactions">
                 <DollarSign className="h-5 w-5" />
                 <span>Transactions</span>
               </Link>
