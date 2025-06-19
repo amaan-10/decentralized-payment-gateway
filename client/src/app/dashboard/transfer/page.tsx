@@ -68,7 +68,29 @@ export default function TransferPage() {
   );
   const [level, setQRLevel] = useState<"L" | "M" | "Q" | "H">("Q");
   const router = useRouter();
-  const { name, fullName, accountNumber, errors } = useAccountData();
+
+  interface Info {
+    account: string;
+    name: string;
+  }
+
+  type Transaction = {
+    _id: number;
+    note: string;
+    amount: number;
+    type: "received" | "send";
+    timestamp: string;
+    receiver: Info;
+    sender: Info;
+  };
+  const { name, fullName, accountNumber, recentTransactions, errors } =
+    useAccountData() as {
+      name: string;
+      fullName: string;
+      accountNumber: string;
+      recentTransactions: Transaction[];
+      errors: any;
+    };
 
   useEffect(() => {
     if (accountNumber) {
@@ -200,27 +222,37 @@ export default function TransferPage() {
             <h2 className="text-lg font-semibold mb-4">Recent Recipients</h2>
 
             <div className="grid grid-cols-4 gap-3">
-              {contacts.map((contact, index) => (
-                <button
-                  key={contact.id}
-                  onClick={handleSendMoneyClick}
-                  className="group flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-slate-800/50 transition-all duration-300"
-                >
-                  <div className="relative">
-                    <div className="w-12 h-12 bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl flex items-center justify-center group-hover:from-slate-700 group-hover:to-slate-600 transition-all duration-300 shadow-lg">
-                      <span className="text-sm font-medium text-slate-300 group-hover:text-slate-100">
-                        {contact.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </span>
+              {recentTransactions
+                .filter((txn) => txn.type === "send")
+                .sort(
+                  (a, b) =>
+                    new Date(b.timestamp).getTime() -
+                    new Date(a.timestamp).getTime()
+                )
+                .slice(0, 3)
+                .map((txn) => (
+                  <button
+                    key={txn._id}
+                    onClick={() => {
+                      router.push(`/pay?acc=${txn.receiver.account}`);
+                    }}
+                    className="group flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-slate-800/50 transition-all duration-300"
+                  >
+                    <div className="relative">
+                      <div className="w-12 h-12 bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl flex items-center justify-center group-hover:from-slate-700 group-hover:to-slate-600 transition-all duration-300 shadow-lg">
+                        <span className="text-sm font-medium text-slate-300 group-hover:text-slate-100">
+                          {txn.receiver.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <span className="text-xs text-slate-400 group-hover:text-slate-300 font-medium tracking-wide transition-colors duration-300">
-                    {contact.name.split(" ")[0]}
-                  </span>
-                </button>
-              ))}
+                    <span className="text-xs text-slate-400 group-hover:text-slate-300 font-medium tracking-wide transition-colors duration-300">
+                      {txn.receiver.name.split(" ")[0]}
+                    </span>
+                  </button>
+                ))}
 
               <button
                 onClick={handleSendMoneyClick}
