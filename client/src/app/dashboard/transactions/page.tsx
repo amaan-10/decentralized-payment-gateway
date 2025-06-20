@@ -350,9 +350,9 @@ export default function TransactionsPage() {
                           <span className="font-roboto">₹</span>
                           {formatAmount(transaction.amount)}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        {/* <p className="text-xs text-muted-foreground">
                           {transaction.category || ""}
-                        </p>
+                        </p> */}
                       </div>
                     </div>
                   ))}
