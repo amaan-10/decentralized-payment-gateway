@@ -1,92 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Camera, QrCode } from "lucide-react";
-import { Html5Qrcode } from "html5-qrcode";
-
-import { Button } from "@/components/ui/button";
+import { Camera, Edit3, QrCode } from "lucide-react";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRouter } from "next/navigation";
 
 export default function ScanQRPage() {
-  const [scanning, setScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<string | null>(null);
-  const [amount, setAmount] = useState("");
-  const [note, setNote] = useState("");
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const scannerContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Clean up scanner on component unmount
-    return () => {
-      if (scannerRef.current && scannerRef.current.isScanning) {
-        scannerRef.current.stop().catch(console.error);
-      }
-    };
-  }, []);
-
-  const startScanner = async () => {
-    if (!scannerContainerRef.current) return;
-
-    try {
-      setScanning(true);
-      setScanResult(null);
-
-      const scanner = new Html5Qrcode("qr-reader");
-      scannerRef.current = scanner;
-
-      await scanner.start(
-        { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-        },
-        (decodedText) => {
-          // Success callback
-          setScanResult(decodedText);
-          stopScanner();
-        },
-        (errorMessage) => {
-          // Error callback
-        }
-      );
-    } catch (err) {
-      console.error("Error starting scanner:", err);
-      setScanning(false);
-    }
-  };
-
-  const stopScanner = async () => {
-    if (scannerRef.current && scannerRef.current.isScanning) {
-      try {
-        await scannerRef.current.stop();
-      } catch (err) {
-        console.error("Error stopping scanner:", err);
-      }
-    }
-    setScanning(false);
-  };
-
-  const resetScanner = () => {
-    setScanResult(null);
-  };
-
-  const handlePayment = () => {
-    // Process payment logic would go here
-    alert(`Payment of $${amount} processed successfully!`);
-    setScanResult(null);
-    setAmount("");
-    setNote("");
-  };
+  const router = useRouter();
 
   return (
     <div className="space-y-6">
@@ -102,7 +28,7 @@ export default function ScanQRPage() {
             Scan QR
           </TabsTrigger>
           <TabsTrigger value="manual" className="flex items-center gap-2">
-            <QrCode className="h-4 w-4" />
+            <Edit3 className="h-4 w-4" />
             Enter Manually
           </TabsTrigger>
         </TabsList>
@@ -116,82 +42,55 @@ export default function ScanQRPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {scanResult ? (
-                <div className="space-y-4">
-                  <div className="rounded-lg bg-muted p-4">
-                    <p className="font-medium">QR Code Detected</p>
-                    <p className="text-sm text-muted-foreground break-all">
-                      {scanResult}
-                    </p>
-                  </div>
+              <div className="space-y-8">
+                {/* QR Scan Button */}
+                <div className="flex justify-center">
+                  <div
+                    onClick={() => router.push("/pay?scan-qr=true")}
+                    className="group cursor-pointer relative"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-700/30 to-teal-600/30 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 scale-110"></div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="scan-amount">Amount</Label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <span className="text-muted-foreground">$</span>
+                    <div className="relative bg-slate-900/80 backdrop-blur-sm border border-slate-700/60 rounded-3xl p-12 shadow-2xl hover:shadow-emerald-900/20 transition-all duration-500 group-hover:border-emerald-600/50 group-hover:bg-slate-900/90">
+                      <div className="absolute top-4 right-4 w-2 h-2 bg-emerald-500/60 rounded-full opacity-40 group-hover:opacity-80 transition-opacity duration-300 animate-pulse"></div>
+                      <div className="absolute bottom-6 left-6 w-1 h-1 bg-teal-400/50 rounded-full opacity-30 group-hover:opacity-70 transition-opacity duration-300"></div>
+
+                      <div className="absolute top-6 left-6 w-3 h-3 border-l-2 border-t-2 border-emerald-500/30 group-hover:border-emerald-400/60 transition-colors duration-300"></div>
+                      <div className="absolute bottom-6 right-6 w-3 h-3 border-r-2 border-b-2 border-emerald-500/30 group-hover:border-emerald-400/60 transition-colors duration-300"></div>
+
+                      <div className="flex flex-col items-center space-y-5">
+                        <div className="relative">
+                          <div className="w-16 h-16 bg-gradient-to-br from-emerald-900/50 to-teal-800/50 rounded-2xl flex items-center justify-center group-hover:from-emerald-800/60 group-hover:to-teal-700/60 transition-all duration-300 shadow-lg border border-emerald-700/30 group-hover:border-emerald-600/50">
+                            <div className="relative">
+                              <div>
+                                <QrCode className="text-emerald-300 group-hover:text-emerald-200 rounded-[1px] transition-colors duration-300" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="absolute inset-0 rounded-2xl border border-emerald-600/30 opacity-0 group-hover:opacity-100 animate-ping"></div>
+                          <div
+                            className="absolute inset-0 rounded-2xl border border-emerald-500/20 opacity-0 group-hover:opacity-100 animate-ping"
+                            style={{ animationDelay: "0.5s" }}
+                          ></div>
+                        </div>
+
+                        <div className="text-center space-y-1">
+                          <h3 className="text-xl font-medium text-slate-100 tracking-tight">
+                            Scan QR Code
+                          </h3>
+                          <p className="text-sm text-slate-400 font-light">
+                            Tap to scan
+                          </p>
+                        </div>
                       </div>
-                      <Input
-                        id="scan-amount"
-                        type="number"
-                        placeholder="0.00"
-                        className="pl-8"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                      />
+
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-sm shadow-emerald-400/50"></div>
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="scan-note">Note (Optional)</Label>
-                    <Input
-                      id="scan-note"
-                      placeholder="What's this for?"
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                    />
-                  </div>
                 </div>
-              ) : (
-                <div className="flex flex-col items-center">
-                  <div
-                    id="qr-reader"
-                    ref={scannerContainerRef}
-                    className="w-full max-w-sm h-64 bg-muted/40 rounded-lg overflow-hidden flex items-center justify-center"
-                  >
-                    {!scanning && (
-                      <div className="text-center p-4">
-                        <QrCode className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-muted-foreground">
-                          Click "Start Scanning" to begin
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-4 w-full flex justify-center">
-                    {!scanning ? (
-                      <Button onClick={startScanner}>Start Scanning</Button>
-                    ) : (
-                      <Button variant="destructive" onClick={stopScanner}>
-                        Stop Scanning
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
+              </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              {scanResult ? (
-                <>
-                  <Button variant="outline" onClick={resetScanner}>
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Scan Again
-                  </Button>
-                  <Button onClick={handlePayment}>Process Payment</Button>
-                </>
-              ) : null}
-            </CardFooter>
           </Card>
         </TabsContent>
 
@@ -203,35 +102,67 @@ export default function ScanQRPage() {
                 Manually enter payment information
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="payment-id">Payment ID or Link</Label>
-                <Input id="payment-id" placeholder="Enter payment ID or link" />
-              </div>
+            <CardContent>
+              <div className="space-y-8">
+                <div className="flex justify-center">
+                  {/* Manual Payment Details Button */}
+                  <div
+                    onClick={() => router.push("/pay?manual=true")}
+                    className="group cursor-pointer relative"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-700/30 to-purple-600/30 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 scale-110"></div>
 
-              <div className="space-y-2">
-                <Label htmlFor="manual-amount">Amount</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <span className="text-muted-foreground">$</span>
+                    <div className="relative bg-slate-900/80 backdrop-blur-sm border border-slate-700/60 rounded-3xl p-12 shadow-2xl hover:shadow-violet-900/20 transition-all duration-500 group-hover:border-violet-600/50 group-hover:bg-slate-900/90">
+                      <div className="absolute top-4 right-4 w-2 h-2 bg-violet-500/60 rounded-full opacity-40 group-hover:opacity-80 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-6 left-6 w-1 h-1 bg-purple-400/50 rounded-full opacity-30 group-hover:opacity-70 transition-opacity duration-300 animate-pulse"></div>
+
+                      <div className="absolute top-6 left-6 w-4 h-px bg-violet-500/30 group-hover:bg-violet-400/60 transition-colors duration-300"></div>
+                      <div className="absolute top-8 left-6 w-3 h-px bg-violet-500/20 group-hover:bg-violet-400/40 transition-colors duration-300"></div>
+                      <div className="absolute bottom-8 right-6 w-4 h-px bg-violet-500/30 group-hover:bg-violet-400/60 transition-colors duration-300"></div>
+                      <div className="absolute bottom-6 right-6 w-2 h-px bg-violet-500/20 group-hover:bg-violet-400/40 transition-colors duration-300"></div>
+
+                      <div className="flex flex-col items-center space-y-5">
+                        <div className="relative">
+                          <div className="w-16 h-16 bg-gradient-to-br from-violet-900/50 to-purple-800/50 rounded-2xl flex items-center justify-center group-hover:from-violet-800/60 group-hover:to-purple-700/60 transition-all duration-300 shadow-lg border border-violet-700/30 group-hover:border-violet-600/50">
+                            <div className="relative">
+                              <Edit3 className="w-6 h-6 text-violet-300 group-hover:text-violet-200 transition-all duration-300 transform group-hover:rotate-3" />
+                              <div className="absolute -bottom-1 -right-1 flex space-x-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="w-0.5 h-0.5 bg-violet-400 rounded-full animate-bounce"></div>
+                                <div
+                                  className="w-0.5 h-0.5 bg-violet-400 rounded-full animate-bounce"
+                                  style={{ animationDelay: "0.1s" }}
+                                ></div>
+                                <div
+                                  className="w-0.5 h-0.5 bg-violet-400 rounded-full animate-bounce"
+                                  style={{ animationDelay: "0.2s" }}
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="absolute inset-0 rounded-2xl border border-violet-600/30 opacity-0 group-hover:opacity-100 animate-ping"></div>
+                          <div
+                            className="absolute inset-0 rounded-2xl border border-violet-500/20 opacity-0 group-hover:opacity-100 animate-ping"
+                            style={{ animationDelay: "0.3s" }}
+                          ></div>
+                        </div>
+
+                        <div className="text-center space-y-1">
+                          <h3 className="text-xl font-medium text-slate-100 tracking-tight">
+                            Manual Details
+                          </h3>
+                          <p className="text-sm text-slate-400 font-light">
+                            Enter payment info
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-gradient-to-r from-transparent via-violet-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-sm shadow-violet-400/50"></div>
+                    </div>
                   </div>
-                  <Input
-                    id="manual-amount"
-                    type="number"
-                    placeholder="0.00"
-                    className="pl-8"
-                  />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="manual-note">Note (Optional)</Label>
-                <Input id="manual-note" placeholder="What's this for?" />
-              </div>
             </CardContent>
-            <CardFooter>
-              <Button className="w-full">Process Payment</Button>
-            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>
