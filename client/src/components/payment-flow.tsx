@@ -33,6 +33,20 @@ export function PaymentFlow() {
     const acc = searchParams.get("acc");
     const amt = searchParams.get("amt");
     const note = searchParams.get("note");
+    const scanqr = searchParams.get("scan-qr");
+    const manual = searchParams.get("manual")
+
+    if (scanqr) {
+      setPaymentMethod("qrcode");
+      setStep(2);
+      return;
+    }
+
+    if (manual) {
+      setPaymentMethod("account");
+      setStep(2);
+      return;
+    }
 
     if (acc && amt) {
       setAccountNumber(acc);
