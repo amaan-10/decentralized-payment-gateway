@@ -8,11 +8,15 @@ import {
   EyeOffIcon,
   ArrowDown,
   ArrowUp,
+  Plus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAccountData } from "@/hooks/useAccountData";
+import { AddMoneyModal } from "@/components/add-money-modal";
+import { SpendLessIntegration } from "@/components/spendless-integration";
+import LoaderWrapper from "@/components/loading";
 
 interface Info {
   account: string;
@@ -32,6 +36,7 @@ type recentTransactions = {
 export default function WalletPage() {
   const [showBalance, setShowBalance] = useState(false);
   const [showCardDetails, setShowCardDetails] = useState(false);
+  const [isAddMoneyModalOpen, setIsAddMoneyModalOpen] = useState(false);
 
   const {
     name,
@@ -41,6 +46,7 @@ export default function WalletPage() {
     email,
     recentTransactions,
     errors,
+    isLoading
   } = useAccountData() as {
     name: string;
     fullName: string;
@@ -49,6 +55,7 @@ export default function WalletPage() {
     email: string;
     recentTransactions: recentTransactions[];
     errors: any;
+    isLoading: boolean;
   };
 
   const maskedAccountNumber =
@@ -102,6 +109,7 @@ export default function WalletPage() {
   }
 
   return (
+    <LoaderWrapper isLoading={isLoading}>
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
@@ -152,9 +160,18 @@ export default function WalletPage() {
         </CardContent>
       </Card>
 
+        <Button
+          onClick={() => setIsAddMoneyModalOpen(true)}
+          variant="outline"
+          className="flex-1 w-full border-neutral-800 text-white hover:bg-neutral-800 transition-all duration-300 hover:scale-[1.015]"
+        >
+          <Plus className="mr-1 mb-[1.8px] h-4 w-4" />
+          Add Balance
+        </Button>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-sm font-medium">Card Details</CardTitle>
+          <CardTitle className="text-sm font-medium">Account Details</CardTitle>
           <Button
             variant="ghost"
             size="sm"
@@ -170,7 +187,7 @@ export default function WalletPage() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-gray-400 text-sm mb-1">Card Number</p>
+              <p className="text-gray-400 text-sm mb-1">Account Number</p>
               <p className="font-mono">
                 {showCardDetails
                   ? accountNumber.replace(/(.{4})/g, "$1 ").trim()
@@ -178,7 +195,7 @@ export default function WalletPage() {
               </p>
             </div>
             <div>
-              <p className="text-gray-400 text-sm mb-1">Card Holder</p>
+              <p className="text-gray-400 text-sm mb-1">Account Holder</p>
               <p>{fullName.toLocaleUpperCase()}</p>
             </div>
             <div>
@@ -194,6 +211,8 @@ export default function WalletPage() {
           </div>
         </CardContent>
       </Card>
+
+      <SpendLessIntegration walletId={accountNumber} walletName={name} />
 
       <Card>
         <CardHeader>
@@ -271,6 +290,13 @@ export default function WalletPage() {
           ))}
         </CardContent>
       </Card>
+      <AddMoneyModal
+        open={isAddMoneyModalOpen}
+        onOpenChange={setIsAddMoneyModalOpen}
+        walletName={name}
+        currentBalance={totalBalance}
+      />
     </div>
+    </LoaderWrapper>
   );
 }

@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
   Bell,
-  CreditCard,
   History,
   Home,
   LogOut,
@@ -38,7 +37,7 @@ const navItems: NavItem[] = [
   },
   {
     title: "My Wallet",
-    href: "/dashboard/wallets",
+    href: "/dashboard/wallet",
     icon: Wallet,
   },
   {
@@ -50,11 +49,6 @@ const navItems: NavItem[] = [
     title: "Scan QR",
     href: "/dashboard/scan-qr",
     icon: QrCode,
-  },
-  {
-    title: "Cards",
-    href: "/dashboard/cards",
-    icon: CreditCard,
   },
   {
     title: "Transactions",
@@ -174,9 +168,7 @@ export default function DashboardLayout({
             ))}
           </nav>
         </aside>
-        <main className="flex-1 overflow-auto p-4 md:p-6 mr-8">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto p-4 md:p-6 mr-8">{children}</main>
       </div>
     </div>
   );

@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAccountData } from "@/hooks/useAccountData";
+import LoaderWrapper from "@/components/loading";
 
 // const transactions = [
 //   {
@@ -152,18 +153,23 @@ export default function TransactionsPage() {
   const [filterType, setFilterType] = useState("all");
   const [dateRange, setDateRange] = useState("all");
 
-  const { name, fullName, totalBalance, recentTransactions, errors } =
-    useAccountData() as {
-      name: string;
-      fullName: string;
-      totalBalance: number;
-      recentTransactions: recentTransactions[];
-      errors: any;
-    };
+  const {
+    name,
+    fullName,
+    totalBalance,
+    recentTransactions,
+    errors,
+    isLoading,
+  } = useAccountData() as {
+    name: string;
+    fullName: string;
+    totalBalance: number;
+    recentTransactions: recentTransactions[];
+    errors: any;
+    isLoading: boolean;
+  };
 
   const transactions = recentTransactions;
-
-  console.log(transactions);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const name =
@@ -366,153 +372,155 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
-          <p className="text-muted-foreground">
-            View and manage your transaction history
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Received
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              <span className="font-roboto">₹</span>
-              {formatAmount(totalReceived)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Send</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">
-              <span className="font-roboto">₹</span>
-              {formatAmount(totalSend)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              className={`text-2xl font-bold ${
-                netBalance >= 0 ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              <span className="font-roboto">₹</span>
-              {formatAmount(netBalance)}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
-          <CardDescription>
-            View all your past transactions grouped by month
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="flex-1 relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search transactions..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="w-[180px]">
-                    <Filter className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Filter by type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Transactions</SelectItem>
-                    <SelectItem value="received">Received Only</SelectItem>
-                    <SelectItem value="send">Send Only</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={dateRange} onValueChange={setDateRange}>
-                  <SelectTrigger className="w-[180px]">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Date range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Time</SelectItem>
-                    <SelectItem value="today">Today</SelectItem>
-                    <SelectItem value="week">This Week</SelectItem>
-                    <SelectItem value="month">This Month</SelectItem>
-                    <SelectItem value="year">This Year</SelectItem>
-                    <SelectItem value="custom">Custom Range</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <Tabs defaultValue="all">
-              <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="received">Received</TabsTrigger>
-                <TabsTrigger value="send">Send</TabsTrigger>
-                <TabsTrigger value="pending">Pending</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="all" className="mt-4">
-                <TransactionsList transactionsList={filteredTransactions} />
-              </TabsContent>
-
-              <TabsContent value="received" className="mt-4">
-                <TransactionsList
-                  transactionsList={filteredTransactions.filter(
-                    (t) => t.type === "received"
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value="send" className="mt-4">
-                <TransactionsList
-                  transactionsList={filteredTransactions.filter(
-                    (t) => t.type === "send"
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value="pending" className="mt-4">
-                <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <p className="text-muted-foreground">
-                    No pending transactions
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
+    <LoaderWrapper isLoading={isLoading}>
+      <div className="space-y-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
+            <p className="text-muted-foreground">
+              View and manage your transaction history
+            </p>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Received
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                <span className="font-roboto">₹</span>
+                {formatAmount(totalReceived)}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Total Send</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                <span className="font-roboto">₹</span>
+                {formatAmount(totalSend)}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div
+                className={`text-2xl font-bold ${
+                  netBalance >= 0 ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                <span className="font-roboto">₹</span>
+                {formatAmount(netBalance)}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Transaction History</CardTitle>
+            <CardDescription>
+              View all your past transactions grouped by month
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search transactions..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Select value={filterType} onValueChange={setFilterType}>
+                    <SelectTrigger className="w-[180px]">
+                      <Filter className="mr-2 h-4 w-4" />
+                      <SelectValue placeholder="Filter by type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Transactions</SelectItem>
+                      <SelectItem value="received">Received Only</SelectItem>
+                      <SelectItem value="send">Send Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={dateRange} onValueChange={setDateRange}>
+                    <SelectTrigger className="w-[180px]">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      <SelectValue placeholder="Date range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Time</SelectItem>
+                      <SelectItem value="today">Today</SelectItem>
+                      <SelectItem value="week">This Week</SelectItem>
+                      <SelectItem value="month">This Month</SelectItem>
+                      <SelectItem value="year">This Year</SelectItem>
+                      <SelectItem value="custom">Custom Range</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Tabs defaultValue="all">
+                <TabsList>
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="received">Received</TabsTrigger>
+                  <TabsTrigger value="send">Send</TabsTrigger>
+                  <TabsTrigger value="pending">Pending</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="all" className="mt-4">
+                  <TransactionsList transactionsList={filteredTransactions} />
+                </TabsContent>
+
+                <TabsContent value="received" className="mt-4">
+                  <TransactionsList
+                    transactionsList={filteredTransactions.filter(
+                      (t) => t.type === "received"
+                    )}
+                  />
+                </TabsContent>
+
+                <TabsContent value="send" className="mt-4">
+                  <TransactionsList
+                    transactionsList={filteredTransactions.filter(
+                      (t) => t.type === "send"
+                    )}
+                  />
+                </TabsContent>
+
+                <TabsContent value="pending" className="mt-4">
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <p className="text-muted-foreground">
+                      No pending transactions
+                    </p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </LoaderWrapper>
   );
 }

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Copy, Send, IndianRupee } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QRCodeGenerator from "@/components/qr-code-generator";
 import { useAccountData } from "@/hooks/useAccountData";
 import { toPng } from "html-to-image";
+import LoaderWrapper from "@/components/loading";
 
 // Mock data for contacts and wallets
 const contacts = [
@@ -83,13 +83,14 @@ export default function TransferPage() {
     receiver: Info;
     sender: Info;
   };
-  const { name, fullName, accountNumber, recentTransactions, errors } =
+  const { name, fullName, accountNumber, recentTransactions, errors, isLoading } =
     useAccountData() as {
       name: string;
       fullName: string;
       accountNumber: string;
       recentTransactions: Transaction[];
       errors: any;
+      isLoading: boolean;
     };
 
   useEffect(() => {
@@ -143,6 +144,7 @@ export default function TransferPage() {
   };
 
   return (
+    <LoaderWrapper isLoading={isLoading}>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Send & Receive</h1>
@@ -379,5 +381,6 @@ export default function TransferPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </LoaderWrapper>
   );
 }
