@@ -1,15 +1,15 @@
 import { BASE_URL } from "@/lib/url";
 import { useEffect, useState } from "react";
 
-
 export function useAccountData() {
   const [name, setName] = useState("");
   const [totalBalance, setTotalBalance] = useState(0);
   const [fullName, setFullName] = useState("");
   const [errors, setErrors] = useState({ accountNumber: "" });
   const [accountNumber, setAccountNumber] = useState("");
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
   const [recentTransactions, setRecentTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
@@ -25,8 +25,8 @@ export function useAccountData() {
         setName(data.first_name + " " + data.last_name);
         setTotalBalance(data.balance);
         setFullName(data.full_name);
-        setAccountNumber(data.accountNumber)
-        setEmail(data.email)
+        setAccountNumber(data.accountNumber);
+        setEmail(data.email);
       } catch (err) {
         setErrors((prev) => ({
           ...prev,
@@ -52,9 +52,12 @@ export function useAccountData() {
       }
     };
 
-    fetchAccountDetails();
-    fetchTransactions();
+    const fetchAll = async () => {
+      await Promise.all([fetchAccountDetails(), fetchTransactions()]);
+      setIsLoading(false);
+    };
 
+    fetchAll();
   }, []);
 
   return {
@@ -65,5 +68,6 @@ export function useAccountData() {
     email,
     recentTransactions,
     errors,
+    isLoading,
   };
 }
