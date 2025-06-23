@@ -34,7 +34,7 @@ export function PaymentFlow() {
     const amt = searchParams.get("amt");
     const note = searchParams.get("note");
     const scanqr = searchParams.get("scan-qr");
-    const manual = searchParams.get("manual")
+    const manual = searchParams.get("manual");
 
     if (scanqr) {
       setPaymentMethod("qrcode");
@@ -117,6 +117,12 @@ export function PaymentFlow() {
       if (res.ok) {
         setPaymentStatus("success");
         setStep(5);
+        const callback = new URLSearchParams(window.location.search).get(
+          "callback"
+        );
+
+        const returnURL = `${callback}?amount=${amount}&notes=${note}&name=${name}&accountNumber=${accountNumber}`;
+        window.location.href = returnURL;
         return;
       } else {
         setPaymentStatus("failed");
