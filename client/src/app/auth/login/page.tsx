@@ -23,11 +23,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import Cookies from "js-cookie";
 import { BASE_URL } from "@/lib/url";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,39 +48,33 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       const result = await res.json();
-
-      localStorage.setItem("token", result.token);
-
-      Cookies.set("authToken", result.token, {
-        path: "/",
-        expires: 7, // days
-        secure: true,
-        sameSite: "Strict",
-      });
 
       if (!res.ok) {
         throw new Error(result.error || "Something went wrong");
       }
 
-      // alert("Login successful");
+      localStorage.setItem("token", result.token);
+      Cookies.set("authToken", result.token, {
+        path: "/",
+        expires: 7,
+        secure: true,
+        sameSite: "Strict",
+      });
+
       toast({
         description: "Login successful.",
         duration: 1700,
       });
 
-      // optionally redirect or reset the form
       setTimeout(() => {
         if (result.hasSetPin === false) {
-          window.location.href = "/auth/set-pin";
+          router.push("/auth/set-pin");
         } else {
-          window.location.href = "/";
+          router.push(redirectTo);
         }
       }, 2000);
     } catch (err: any) {
@@ -83,7 +82,6 @@ export default function LoginPage() {
         description: `Error: ${err.message || "Something went wrong"}`,
         variant: "destructive",
       });
-      // alert(err.message);
     } finally {
       setIsLoading(false);
     }
