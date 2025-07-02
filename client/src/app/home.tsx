@@ -23,35 +23,44 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 px-10 overflow-hidden">
+      <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 md:pt-40 md:pb-32 px-6 sm:px-10 overflow-hidden">
+        {/* Background Blurs */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[120px] opacity-20"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-[120px] opacity-20"></div>
+          <div className="absolute top-1/4 left-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-blue-600 rounded-full filter blur-[100px] sm:blur-[120px] opacity-20"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-purple-600 rounded-full filter blur-[100px] sm:blur-[120px] opacity-20"></div>
         </div>
 
+        {/* Content Container */}
         <div className="container mx-auto px-4 relative z-10">
-          <div className="flex justify-center items-center -mt-7 mb-5">
-            <Badge className=" self-center bg-neutral-400/30 text-neutral-300 border border-neutral-400 hover:bg-neutral-400/40 px-3 py-1 text-sm rounded-full">
+          {/* Status Badge */}
+          <div className="flex justify-center items-center mt-4 sm:-mt-7 mb-5">
+            <Badge className="self-center bg-neutral-400/30 text-neutral-300 border border-neutral-400 hover:bg-neutral-400/40 px-3 py-1 text-sm rounded-full">
               In Progress, Stay Tuned! 🚀
             </Badge>
           </div>
-          <div className="flex items-center justify-between gap-px">
-            <div className="space-y-8">
+
+          {/* Flex Layout: Column on mobile, row on larger */}
+          <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-10">
+            {/* Text Content */}
+            <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
               <Badge className="bg-blue-900/30 text-blue-400 hover:bg-blue-900/40 px-3 py-1 text-sm">
                 Next Generation Payments
               </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight font-grotesk">
+
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight font-grotesk">
                 Fast. Secure. <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
                   Borderless <br /> Payments.
                 </span>
               </h1>
-              <p className="text-gray-400 text-base md:text-lg max-w-lg">
+
+              <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-xl mx-auto lg:mx-0">
                 Experience the future of financial transactions with our
                 decentralized platform. No intermediaries, no borders, just
                 seamless transfers.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
@@ -68,23 +77,23 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative flex justify-center h-[400px]">
+            {/* Image with Gradient */}
+            <div className="relative flex justify-center items-center w-full max-w-md sm:max-w-lg h-[300px] sm:h-[400px]">
               <div className="relative z-10 wallet-animation">
-                <div className="relative">
-                  <Image
-                    src="/wallet-img.png"
-                    alt="Crypto Wallet Illustration"
-                    width={500}
-                    height={500}
-                    className="object-contain pr-20"
-                  />
-                </div>
+                <Image
+                  src="/wallet-img.png"
+                  alt="Crypto Wallet Illustration"
+                  width={500}
+                  height={500}
+                  className="object-contain w-full px-4 sm:px-0 lg:pr-20"
+                />
               </div>
-              <div className="absolute left-[10%] right-[-10%] top-[95%] bottom-[-15%] bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-xl"></div>
+              <div className="absolute left-[5%] right-[-5%] top-[95%] bottom-[-15%] bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-xl"></div>
             </div>
           </div>
 
-          <div className="flex justify-center mt-20">
+          {/* Scroll Down */}
+          <div className="flex justify-center mt-16 sm:mt-20">
             <Link
               href="#how-it-works"
               className="flex flex-col items-center text-gray-400 hover:text-white transition-colors animate-bounce"
