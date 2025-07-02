@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,36 +29,16 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "My Wallet",
-    href: "/dashboard/wallet",
-    icon: Wallet,
-  },
+  { title: "Dashboard", href: "/dashboard", icon: Home },
+  { title: "My Wallet", href: "/dashboard/wallet", icon: Wallet },
   {
     title: "Send & Receive",
     href: "/dashboard/transfer",
     icon: ArrowLeftRight,
   },
-  {
-    title: "Scan QR",
-    href: "/dashboard/scan-qr",
-    icon: QrCode,
-  },
-  {
-    title: "Transactions",
-    href: "/dashboard/transactions",
-    icon: History,
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
+  { title: "Scan QR", href: "/dashboard/scan-qr", icon: QrCode },
+  { title: "Transactions", href: "/dashboard/transactions", icon: History },
+  { title: "Settings", href: "/settings", icon: Settings },
 ];
 
 export default function DashboardLayout({
@@ -72,7 +51,8 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background px-12">
+      {/* Header */}
+      <header className="sticky top-0 z-30 flex h-16 sm:h-20 items-center gap-4 border-b bg-background px-4 sm:px-6 md:px-12">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="md:hidden">
@@ -90,15 +70,6 @@ export default function DashboardLayout({
                   <Logo className="h-6 w-6" />
                   <span>DePay</span>
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="ml-auto"
-                  onClick={() => setOpen(false)}
-                >
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close</span>
-                </Button>
               </div>
               <nav className="grid gap-2 p-4">
                 {navItems.map((item) => (
@@ -130,12 +101,16 @@ export default function DashboardLayout({
             </div>
           </SheetContent>
         </Sheet>
-        <Link href="/" className="flex items-center gap-3 font-semibold">
+
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 font-semibold">
           <Logo className="h-7 w-7" />
           <span className="hidden md:inline-block font-bold text-xl">
             DePay
           </span>
         </Link>
+
+        {/* Right buttons */}
         <div className="ml-auto flex items-center gap-2">
           <Button variant="outline" size="icon" className="relative">
             <Bell className="h-5 w-5" />
@@ -148,8 +123,11 @@ export default function DashboardLayout({
           </Button>
         </div>
       </header>
+
+      {/* Main Layout */}
       <div className="flex flex-1">
-        <aside className="hidden w-64 border-r bg-muted/40 md:block pl-4">
+        {/* Sidebar (hidden on mobile) */}
+        <aside className="hidden md:block w-64 border-r bg-muted/40 pl-4">
           <nav className="grid gap-2 p-4">
             {navItems.map((item) => (
               <Link
@@ -168,7 +146,11 @@ export default function DashboardLayout({
             ))}
           </nav>
         </aside>
-        <main className="flex-1 overflow-auto p-4 md:p-6 mr-8">{children}</main>
+
+        {/* Main content */}
+        <main className="flex-1 overflow-auto px-4 py-6 sm:px-6 md:px-8">
+          {children}
+        </main>
       </div>
     </div>
   );
